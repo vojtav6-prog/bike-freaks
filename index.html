@@ -1,0 +1,2725 @@
+<!DOCTYPE html>
+<html lang="cs" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bike Freaks Holice | Cyklistický klub od roku 1992</title>
+  <meta name="description" content="Cyklistický klub Bike Freaks Holice. Trial, horská kola a silnice. Trénujeme mládež i dospělé a jezdíme na kole v Holicích." />
+
+  <!-- Klubový znak ruky jako favicon -->
+  <link rel="icon" type="image/png" href="img/logo-2.png" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            carbon: '#050B14',
+            navy: {
+              900: '#0A192F',
+              800: '#0F294A',
+              700: '#1B4378',
+            },
+            slatecool: {
+              100: '#F1F5F9',
+              200: '#E2E8F0',
+              400: '#94A3B8',
+              700: '#334155',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Striktně ostré 0px rohy v celém rozhraní */
+    *, *::before, *::after {
+      border-radius: 0px !important;
+    }
+
+    /* Zkosené štítky a tlačítka (skewX(-10deg) + protizkosení vnitřního textu) */
+    .skew-badge {
+      transform: skewX(-10deg);
+    }
+    .skew-badge > .skew-inner {
+      display: inline-flex;
+      align-items: center;
+      transform: skewX(10deg);
+    }
+
+    /* Diagonální výřez úvodní sekce */
+    .clip-hero-diagonal {
+      clip-path: polygon(0 0, 100% 0, 100% 91%, 0 100%);
+    }
+    @media (max-width: 640px) {
+      .clip-hero-diagonal {
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+      }
+    }
+
+    /* Architektonické pozadí úvodu v klubových barvách */
+    .hero-navy-bg {
+      background-color: #050B14;
+      background-image: linear-gradient(125deg, #050B14 0%, #0A192F 48%, #0F294A 78%, #1B4378 100%);
+    }
+
+    /* Jemné diagonální pruhy v pozadí Hero sekce */
+    .hero-diagonal-lines {
+      background-image: repeating-linear-gradient(
+        -55deg,
+        rgba(27, 67, 120, 0.16) 0px,
+        rgba(27, 67, 120, 0.16) 2px,
+        transparent 2px,
+        transparent 38px
+      );
+    }
+
+    /* Plynulé prolínání úvodních fotek (pokud jsou nahrané ve složce img/) */
+    .hero-slide {
+      transition: opacity 1.1s ease-in-out, transform 6.5s ease-out;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1.03);
+      z-index: 1;
+    }
+    .hero-slide.inactive {
+      opacity: 0;
+      transform: scale(1);
+      z-index: 0;
+    }
+
+    /* Zvýraznění položky v skrytém režimu mazání aktualit (červený rámeček a křížek) */
+    .delete-article-row:hover,
+    .delete-article-row:focus-within {
+      border-color: #DC2626 !important;
+      background-color: #FEF2F2 !important;
+    }
+    .delete-article-row:hover .delete-cross-btn,
+    .delete-article-row:focus-within .delete-cross-btn {
+      background-color: #DC2626 !important;
+      border-color: #DC2626 !important;
+      color: #FFFFFF !important;
+    }
+
+    /* Ochrana proti vodorovnému posouvání na mobilech */
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+  </style>
+</head>
+<body class="bg-[#F1F5F9] text-[#050B14] font-sans antialiased selection:bg-[#1B4378] selection:text-[#FFFFFF] flex flex-col min-h-screen">
+
+  <!-- =====================================================================
+       1. HORNÍ NAVIGACE (STICKY TOP – BEZ POLOŽKY DOMŮ)
+       ===================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#050B14] border-b-2 border-[#1B4378] text-[#FFFFFF]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+
+        <!-- Levá část: Logo klubu (kliknutí vrátí na úvod hlavní stránky) -->
+        <button type="button" onclick="navigateToSection('uvod')" class="flex items-center gap-3 text-left focus:outline-none cursor-pointer">
+          <img
+            src="img/logo.png"
+            alt="Bike Freaks Holice logo"
+            class="h-10 sm:h-12 w-auto object-contain shrink-0"
+            onerror="this.style.display='none'; document.getElementById('header-logo-fallback').classList.remove('hidden');"
+          />
+          <div id="header-logo-fallback" class="hidden w-10 h-10 bg-[#1B4378] border border-[#E2E8F0] flex items-center justify-center shrink-0">
+            <span class="font-black text-sm tracking-tighter text-[#FFFFFF]">BF</span>
+          </div>
+          <div class="leading-none">
+            <span class="block font-black tracking-wider text-base sm:text-lg text-[#FFFFFF] uppercase">
+              BIKE FREAKS HOLICE
+            </span>
+            <span class="block text-[11px] font-semibold tracking-[0.18em] uppercase text-[#94A3B8] mt-1">
+              Cyklistický klub • 1992
+            </span>
+          </div>
+        </button>
+
+        <!-- Pravá část: Pouze 5 požadovaných odkazů (bez Domů) -->
+        <nav class="hidden md:flex items-center gap-1" aria-label="Hlavní navigace">
+          <button type="button" data-nav="treninky" onclick="navigateToSection('treninky')" class="nav-link px-3.5 py-2 text-xs lg:text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A] transition-colors cursor-pointer">
+            Tréninky
+          </button>
+          <button type="button" data-nav="podpora" onclick="navigateToSection('podpora')" class="nav-link px-3.5 py-2 text-xs lg:text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A] transition-colors cursor-pointer">
+            Podpora
+          </button>
+          <button type="button" data-nav="aktuality" onclick="navigateToSection('aktuality')" class="nav-link px-3.5 py-2 text-xs lg:text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A] transition-colors cursor-pointer">
+            Aktuality
+          </button>
+          <button type="button" data-nav="onas" onclick="openAboutPage()" class="nav-link px-3.5 py-2 text-xs lg:text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A] transition-colors cursor-pointer">
+            O nás
+          </button>
+          <button type="button" data-nav="kontakt" onclick="navigateToSection('kontakt')" class="nav-link ml-1.5 px-4 py-2 text-xs lg:text-sm font-bold uppercase tracking-wider border border-[#E2E8F0] text-[#FFFFFF] hover:bg-[#FFFFFF] hover:text-[#050B14] transition-colors cursor-pointer">
+            Kontakt
+          </button>
+        </nav>
+
+        <!-- Mobilní hamburger tlačítko -->
+        <button
+          id="mobile-menu-btn"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Otevřít navigaci"
+          class="md:hidden p-2.5 border border-[#334155] text-[#FFFFFF] hover:bg-[#0F294A] focus:outline-none cursor-pointer"
+        >
+          <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobilní rozbalovací menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-[#050B14] border-t border-[#1B4378] px-4 py-3 space-y-1">
+      <button type="button" onclick="closeMobileMenu(); navigateToSection('treninky');" class="w-full text-left block px-4 py-3 text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A]">
+        Tréninky
+      </button>
+      <button type="button" onclick="closeMobileMenu(); navigateToSection('podpora');" class="w-full text-left block px-4 py-3 text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A]">
+        Podpora
+      </button>
+      <button type="button" onclick="closeMobileMenu(); navigateToSection('aktuality');" class="w-full text-left block px-4 py-3 text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A]">
+        Aktuality
+      </button>
+      <button type="button" onclick="closeMobileMenu(); openAboutPage();" class="w-full text-left block px-4 py-3 text-sm font-bold uppercase tracking-wider text-[#FFFFFF] bg-[#1B4378]">
+        O nás
+      </button>
+      <button type="button" onclick="closeMobileMenu(); navigateToSection('kontakt');" class="w-full text-left block px-4 py-3 text-sm font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#0F294A]">
+        Kontakt
+      </button>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       HLAVNÍ STRÁNKA (MAIN LANDING VIEW)
+       ===================================================================== -->
+  <div id="main-landing-view" class="flex-grow flex flex-col">
+
+    <!-- -------------------------------------------------------------------
+         2. ÚVODNÍ SEKCE (HERO BANNER – TICHÉ PŘEDNAČTENÍ FOTEK + ZNAK RUKY)
+         ------------------------------------------------------------------- -->
+    <section id="uvod" class="relative hero-navy-bg text-[#FFFFFF] clip-hero-diagonal overflow-hidden">
+      <!-- Geometrické pozadí -->
+      <div class="absolute inset-0 hero-diagonal-lines pointer-events-none"></div>
+      <div class="hidden lg:block absolute top-0 right-0 w-1/3 h-full bg-[#0A192F]/90 border-l-2 border-[#1B4378] pointer-events-none" style="clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%);"></div>
+
+      <!-- Prolínající se úvodní fotografie (zobrazí se jen pokud existují ve složce img/) -->
+      <div id="hero-slides-container" class="hidden absolute inset-0 w-full h-full z-0"></div>
+      <div
+        id="hero-photo-overlay"
+        class="hidden absolute inset-0 z-10 pointer-events-none"
+        style="background: linear-gradient(90deg, rgba(5,11,20,0.92) 0%, rgba(10,25,47,0.82) 58%, rgba(10,25,47,0.60) 100%);"
+      ></div>
+
+      <!-- Obsah Hero sekce -->
+      <div class="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20 lg:py-24 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+
+          <!-- Levý sloupec -->
+          <div class="lg:col-span-8">
+            <div class="inline-block bg-[#1B4378] border-l-4 border-[#FFFFFF] px-4 py-1.5 skew-badge mb-6">
+              <span class="skew-inner text-xs sm:text-sm font-extrabold tracking-[0.16em] uppercase text-[#FFFFFF]">
+                CYKLISTICKÝ KLUB • OD ROKU 1992
+              </span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tight text-[#FFFFFF] uppercase leading-[1.08] mb-5">
+              BIKE FREAKS HOLICE
+            </h1>
+
+            <p class="text-base sm:text-lg lg:text-xl text-[#E2E8F0] font-normal leading-relaxed mb-9 max-w-xl">
+              Trial, horská kola a silnice. Trénujeme mládež i dospělé a jezdíme na kole v Holicích.
+            </p>
+
+            <!-- Tlačítka akce -->
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
+              <button
+                type="button"
+                onclick="navigateToSection('treninky')"
+                class="inline-flex items-center justify-center bg-[#FFFFFF] hover:bg-[#E2E8F0] text-[#050B14] font-extrabold text-sm sm:text-base uppercase tracking-wider px-7 py-4 skew-badge transition-colors cursor-pointer"
+              >
+                <span class="skew-inner gap-2.5">
+                  <span>Rozpis tréninků</span>
+                  <span aria-hidden="true">→</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onclick="openAboutPage()"
+                class="inline-flex items-center justify-center border-2 border-[#FFFFFF] bg-[#050B14]/75 hover:bg-[#FFFFFF] hover:text-[#050B14] text-[#FFFFFF] font-bold text-sm sm:text-base uppercase tracking-wider px-7 py-3.5 transition-colors cursor-pointer"
+              >
+                O nás
+              </button>
+            </div>
+
+            <!-- Indikátory snímků (pokud jsou načteny hero fotky) -->
+            <div id="hero-dots" class="hidden mt-10 flex items-center gap-2.5" role="tablist" aria-label="Výběr úvodní fotografie"></div>
+          </div>
+
+          <!-- Pravý sloupec: Rámovaný znak ruky (img/logo-2.png) -->
+          <div class="lg:col-span-4 flex justify-start lg:justify-end">
+            <div class="relative bg-[#050B14] border-2 border-[#1B4378] p-6 sm:p-8 w-full max-w-[260px] sm:max-w-[290px] flex flex-col items-center justify-center">
+              <span class="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-[#FFFFFF]"></span>
+              <span class="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-[#FFFFFF]"></span>
+
+              <div class="w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center">
+                <img
+                  src="img/logo-2.png"
+                  alt="Znak Bike Freaks Holice"
+                  class="max-h-full max-w-full object-contain"
+                  onerror="this.style.display='none'; document.getElementById('hero-emblem-fallback').classList.remove('hidden');"
+                />
+                <div id="hero-emblem-fallback" class="hidden text-center">
+                  <div class="text-4xl font-black tracking-tighter text-[#FFFFFF]">BFH</div>
+                  <div class="text-xs font-bold uppercase tracking-widest text-[#94A3B8] mt-1">1992</div>
+                </div>
+              </div>
+
+              <div class="mt-5 pt-3 border-t border-[#334155] w-full flex items-center justify-between text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#94A3B8]">
+                <span>HOLICE</span>
+                <span class="text-[#FFFFFF]">EST. 1992</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------------
+         3. ROZPIS TRÉNINKŮ (#treninky – NÁSLEDUJÍCÍCH 7 DNÍ + EDITOR BEZ HESLA)
+         ------------------------------------------------------------------- -->
+    <section id="treninky" class="py-12 sm:py-16 lg:py-20 bg-[#F1F5F9] border-b border-[#E2E8F0]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+        <!-- Hlavička sekce + dvě malá nenápadná tlačítka nad sebou vpravo nahoře -->
+        <div class="flex items-start justify-between gap-4 mb-6">
+          <div>
+            <div class="flex items-center gap-2.5 mb-2">
+              <span class="w-6 h-1 bg-[#1B4378] inline-block"></span>
+              <span class="text-xs font-extrabold uppercase tracking-[0.18em] text-[#1B4378]">Aktuální týdenní plán</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#050B14] uppercase tracking-tight">
+              Rozpis tréninků
+            </h2>
+            <p class="text-xs sm:text-sm text-[#334155] font-medium mt-1">
+              Přehled tréninků na následujících 7 dní
+            </p>
+          </div>
+
+          <!-- Dvě malá, světlá, nenápadná tlačítka nad sebou -->
+          <div class="flex flex-col items-stretch gap-1 shrink-0">
+            <button
+              type="button"
+              onclick="openTrainingEditorModal(true)"
+              class="text-[11px] font-semibold text-[#334155] hover:text-[#050B14] bg-[#FFFFFF]/80 hover:bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#94A3B8] px-2.5 py-1 text-left transition-colors cursor-pointer"
+            >
+              + Přidat trénink
+            </button>
+            <button
+              type="button"
+              onclick="openTrainingEditorModal(false)"
+              class="text-[11px] font-semibold text-[#334155] hover:text-[#050B14] bg-[#FFFFFF]/80 hover:bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#94A3B8] px-2.5 py-1 text-left transition-colors cursor-pointer"
+            >
+              ⚙ Úprava rozpisu
+            </button>
+          </div>
+        </div>
+
+        <!-- Zkosené filtry všech 5 disciplín -->
+        <div class="flex flex-wrap items-center gap-2 mb-6" role="group" aria-label="Filtr disciplín">
+          <button type="button" data-filter="all" onclick="setScheduleFilter('all')" class="filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-[#0A192F] text-[#FFFFFF] border border-[#0A192F] transition-colors cursor-pointer">
+            <span class="skew-inner">Vše</span>
+          </button>
+          <button type="button" data-filter="Trial" onclick="setScheduleFilter('Trial')" class="filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#FFFFFF] text-[#050B14] border border-[#94A3B8] hover:border-[#0A192F] transition-colors cursor-pointer">
+            <span class="skew-inner">Trial</span>
+          </button>
+          <button type="button" data-filter="Horská kola" onclick="setScheduleFilter('Horská kola')" class="filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#FFFFFF] text-[#050B14] border border-[#94A3B8] hover:border-[#0A192F] transition-colors cursor-pointer">
+            <span class="skew-inner">Horská kola</span>
+          </button>
+          <button type="button" data-filter="Silniční kola" onclick="setScheduleFilter('Silniční kola')" class="filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#FFFFFF] text-[#050B14] border border-[#94A3B8] hover:border-[#0A192F] transition-colors cursor-pointer">
+            <span class="skew-inner">Silniční kola</span>
+          </button>
+          <button type="button" data-filter="Hala" onclick="setScheduleFilter('Hala')" class="filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#FFFFFF] text-[#050B14] border border-[#94A3B8] hover:border-[#0A192F] transition-colors cursor-pointer">
+            <span class="skew-inner">Hala</span>
+          </button>
+          <button type="button" data-filter="Tělocvična" onclick="setScheduleFilter('Tělocvična')" class="filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#FFFFFF] text-[#050B14] border border-[#94A3B8] hover:border-[#0A192F] transition-colors cursor-pointer">
+            <span class="skew-inner">Tělocvična</span>
+          </button>
+        </div>
+
+        <!-- MOBILNÍ ZOBRAZENÍ (< 768px): Velké přehledné karty bez editačních tlačítek -->
+        <div id="schedule-mobile-cards" class="grid grid-cols-1 gap-3 md:hidden"></div>
+
+        <!-- DESKTOP & TABLET ZOBRAZENÍ (>= 768px): Ostrá tabulka bez editačních tlačítek -->
+        <div class="hidden md:block bg-[#FFFFFF] border-2 border-[#0A192F]">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#0A192F] text-[#FFFFFF] text-xs uppercase tracking-wider border-b-2 border-[#1B4378]">
+                <th class="py-4 px-5 font-extrabold">Datum</th>
+                <th class="py-4 px-4 font-extrabold">Čas startu</th>
+                <th class="py-4 px-5 font-extrabold">Disciplína</th>
+                <th class="py-4 px-5 font-extrabold">Místo</th>
+                <th class="py-4 px-5 font-extrabold text-right">Délka</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-desktop-body" class="divide-y divide-[#E2E8F0] text-sm"></tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------------
+         4. PODPORA ČINNOSTI KLUBU (#podpora – NAD AKTUALITAMI, DVA ŘÁDKY)
+         ------------------------------------------------------------------- -->
+    <section id="podpora" class="py-12 sm:py-16 lg:py-20 bg-[#FFFFFF] border-b border-[#E2E8F0]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+        <!-- Tmavě modrý banner podpory -->
+        <div class="bg-[#0A192F] text-[#FFFFFF] p-6 sm:p-8 border-l-8 border-[#1B4378] mb-8">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="w-5 h-0.5 bg-[#E2E8F0] inline-block"></span>
+            <span class="text-xs font-bold uppercase tracking-[0.18em] text-[#94A3B8]">Dotační a veřejná podpora</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#FFFFFF]">
+            Podpora činnosti klubu
+          </h2>
+          <p class="mt-3 text-sm sm:text-base lg:text-lg text-[#E2E8F0] leading-relaxed max-w-3xl">
+            Sportovní činnost klubu <strong class="text-[#FFFFFF] font-extrabold">Bike Freaks Holice</strong> je finančně podporována <strong class="text-[#FFFFFF] font-extrabold">městem Holice</strong> a <strong class="text-[#FFFFFF] font-extrabold">Pardubickým krajem</strong>.
+          </p>
+        </div>
+
+        <!-- Dva plnošířkové horizontální řádky pod sebou -->
+        <div class="grid grid-cols-1 gap-6">
+
+          <!-- Řádek 1: Město Holice -->
+          <div class="bg-[#F1F5F9] border-2 border-[#0A192F] p-5 sm:p-7 flex flex-col gap-5">
+            <!-- Horní lišta: vlevo název města, vpravo popis podpory -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E2E8F0] pb-4">
+              <div class="flex items-center gap-3">
+                <span class="inline-block bg-[#0A192F] text-[#FFFFFF] text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 skew-badge">
+                  <span class="skew-inner">Hlavní podporovatel</span>
+                </span>
+                <h3 class="text-xl sm:text-2xl font-black text-[#050B14] uppercase tracking-tight">
+                  Město Holice
+                </h3>
+              </div>
+              <p class="text-xs sm:text-sm text-[#334155] font-semibold sm:text-right">
+                Finanční podpora sportovní činnosti a mládeže v Holicích
+              </p>
+            </div>
+
+            <!-- Spodní řádek: široký bílý box s velkým horizontálním logem -->
+            <div class="w-full h-28 sm:h-36 bg-[#FFFFFF] border border-[#94A3B8] flex items-center justify-center p-4 sm:p-6">
+              <img
+                src="img/holice.png"
+                alt="Logo Město Holice"
+                class="max-h-full max-w-full object-contain"
+                onerror="this.style.display='none'; document.getElementById('holice-fallback').classList.remove('hidden');"
+              />
+              <div id="holice-fallback" class="hidden flex items-center gap-3 text-[#0A192F]">
+                <svg class="w-12 h-12" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M10 6H38V24C38 33.5 24 42 24 42C24 42 10 33.5 10 24V6Z" fill="#F1F5F9" />
+                  <path d="M16 16H32V24H16V16Z" fill="#0A192F" />
+                  <line x1="24" y1="24" x2="24" y2="35" />
+                </svg>
+                <span class="text-2xl font-black uppercase tracking-wider">MĚSTO HOLICE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Řádek 2: Pardubický kraj -->
+          <div class="bg-[#F1F5F9] border-2 border-[#0A192F] p-5 sm:p-7 flex flex-col gap-5">
+            <!-- Horní lišta: vlevo název kraje, vpravo popis podpory -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E2E8F0] pb-4">
+              <div class="flex items-center gap-3">
+                <span class="inline-block bg-[#1B4378] text-[#FFFFFF] text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 skew-badge">
+                  <span class="skew-inner">Regionální podpora</span>
+                </span>
+                <h3 class="text-xl sm:text-2xl font-black text-[#050B14] uppercase tracking-tight">
+                  Pardubický kraj
+                </h3>
+              </div>
+              <p class="text-xs sm:text-sm text-[#334155] font-semibold sm:text-right">
+                Podpora regionálního sportu a reprezentace
+              </p>
+            </div>
+
+            <!-- Spodní řádek: široký bílý box s velkým horizontálním logem -->
+            <div class="w-full h-28 sm:h-36 bg-[#FFFFFF] border border-[#94A3B8] flex items-center justify-center p-4 sm:p-6">
+              <img
+                src="img/pardubicky-kraj.png"
+                alt="Logo Pardubický kraj"
+                class="max-h-full max-w-full object-contain"
+                onerror="this.style.display='none'; document.getElementById('kraj-fallback').classList.remove('hidden');"
+              />
+              <div id="kraj-fallback" class="hidden flex items-center gap-3 text-[#1B4378]">
+                <svg class="w-12 h-12" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <rect x="8" y="8" width="32" height="32" fill="#F1F5F9" />
+                  <line x1="24" y1="8" x2="24" y2="40" />
+                  <line x1="8" y1="24" x2="40" y2="24" />
+                  <rect x="12" y="12" width="8" height="8" fill="#0A192F" stroke="none" />
+                  <rect x="28" y="28" width="8" height="8" fill="#1B4378" stroke="none" />
+                </svg>
+                <span class="text-2xl font-black uppercase tracking-wider">PARDUBICKÝ KRAJ</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------------
+         5. AKTUALITY (#aktuality – MULTI-FOTO A SKRYTÉ MAZÁNÍ V "+")
+         ------------------------------------------------------------------- -->
+    <section id="aktuality" class="py-12 sm:py-16 lg:py-20 bg-[#F1F5F9]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+        <!-- Hlavička sekce + nenápadné tlačítko "+" v pravém horním rohu -->
+        <div class="flex items-start justify-between gap-4 mb-8">
+          <div>
+            <div class="flex items-center gap-2.5 mb-2">
+              <span class="w-6 h-1 bg-[#1B4378] inline-block"></span>
+              <span class="text-xs font-extrabold uppercase tracking-[0.18em] text-[#1B4378]">Výsledky a týmové akce</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#050B14] uppercase tracking-tight">
+              Aktuality
+            </h2>
+          </div>
+
+          <!-- Tlačítko "+" pro přidání aktuality (až 3 fotky) i skrytou správu mazání -->
+          <button
+            type="button"
+            onclick="openNewsPlusModal()"
+            title="Přidat aktualitu"
+            aria-label="Přidat aktualitu"
+            class="w-10 h-10 sm:w-11 sm:h-11 bg-[#FFFFFF] hover:bg-[#0A192F] text-[#0A192F] hover:text-[#FFFFFF] border-2 border-[#0A192F] flex items-center justify-center font-black text-xl leading-none transition-colors shrink-0 cursor-pointer"
+          >
+            +
+          </button>
+        </div>
+
+        <!-- Stavový banner po přidání nebo smazání aktuality -->
+        <div id="news-toast" class="hidden mb-6 bg-[#0A192F] text-[#FFFFFF] border-l-8 border-[#1B4378] px-5 py-3.5 flex items-center justify-between gap-4">
+          <span id="news-toast-text" class="text-xs sm:text-sm font-semibold"></span>
+          <button type="button" onclick="hideNewsToast()" class="text-xs font-bold uppercase tracking-wider text-[#E2E8F0] hover:text-[#FFFFFF] px-2.5 py-1 border border-[#334155] cursor-pointer">
+            OK
+          </button>
+        </div>
+
+        <!-- Mřížka 2x2 na tabletu a desktopu, 1 sloupec na mobilu -->
+        <div id="news-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- =====================================================================
+       6. CELOSTRÁNKOVÁ SEKCE: O NÁS (INTERAKTIVNÍ ČASOVÁ OSA)
+       ===================================================================== -->
+  <section id="about-page-view" class="hidden flex-grow bg-[#FFFFFF] flex flex-col">
+
+    <!-- Horní lišta s tlačítkem zpět -->
+    <div class="bg-[#F1F5F9] border-b border-[#E2E8F0]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <button
+          type="button"
+          onclick="closeAboutPage()"
+          class="inline-flex items-center gap-2.5 bg-[#0A192F] hover:bg-[#1B4378] text-[#FFFFFF] font-extrabold text-xs sm:text-sm uppercase tracking-wider px-5 py-3 transition-colors cursor-pointer"
+        >
+          <span aria-hidden="true">←</span>
+          <span>Zpět na hlavní stránku</span>
+        </button>
+
+        <span class="text-xs font-bold uppercase tracking-widest text-[#334155] hidden sm:inline">
+          Profil a historie klubu
+        </span>
+      </div>
+    </div>
+
+    <!-- Tmavě modrá hlavička stránky O nás se znakem ruky -->
+    <div class="bg-[#0A192F] text-[#FFFFFF] border-b-4 border-[#1B4378]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+          <div class="lg:col-span-9">
+            <div class="inline-block bg-[#1B4378] px-3.5 py-1 skew-badge mb-4">
+              <span class="skew-inner text-xs font-extrabold uppercase tracking-[0.18em] text-[#FFFFFF]">
+                OD ROKU 1992 V HOLICÍCH
+              </span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-[#FFFFFF]">
+              O klubu Bike Freaks Holice
+            </h1>
+            <p class="mt-4 text-base sm:text-lg lg:text-xl text-[#E2E8F0] leading-relaxed max-w-3xl">
+              Jsme parta cyklistických nadšenců z Holic. Od roku 1992 se věnujeme cyklotrialu, horským kolům a silniční cyklistice. Zaměřujeme se především na pravidelné tréninky a práci s mládeží i dospělými v Holicích.
+            </p>
+          </div>
+
+          <div class="lg:col-span-3 flex justify-start lg:justify-end">
+            <div class="bg-[#050B14] border-2 border-[#1B4378] p-5 w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center shrink-0">
+              <img
+                src="img/logo-2.png"
+                alt="Znak Bike Freaks Holice"
+                class="max-h-full max-w-full object-contain"
+                onerror="this.style.display='none'; document.getElementById('about-emblem-fallback').classList.remove('hidden');"
+              />
+              <span id="about-emblem-fallback" class="hidden text-3xl font-black text-[#FFFFFF]">BFH</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Tři pilíře klubu -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 pt-8 border-t border-[#1B4378]">
+          <div class="bg-[#0F294A] p-4 border-l-4 border-[#FFFFFF]">
+            <div class="text-xs font-bold uppercase tracking-wider text-[#94A3B8]">Disciplíny</div>
+            <div class="text-base sm:text-lg font-extrabold text-[#FFFFFF] mt-1">Trial, horská kola, silnice</div>
+          </div>
+          <div class="bg-[#0F294A] p-4 border-l-4 border-[#E2E8F0]">
+            <div class="text-xs font-bold uppercase tracking-wider text-[#94A3B8]">Tréninkové zázemí</div>
+            <div class="text-base sm:text-lg font-extrabold text-[#FFFFFF] mt-1">Lokalita V6, Holice</div>
+          </div>
+          <div class="bg-[#0F294A] p-4 border-l-4 border-[#E2E8F0]">
+            <div class="text-xs font-bold uppercase tracking-wider text-[#94A3B8]">Zaměření klubu</div>
+            <div class="text-base sm:text-lg font-extrabold text-[#FFFFFF] mt-1">Práce s mládeží i dospělými</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interaktivní časová osa (1992, 2000, 2008, 2016, 2022, 2026) -->
+    <div class="flex-grow bg-[#F1F5F9] py-12 sm:py-16 lg:py-20">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="mb-8 sm:mb-12">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="w-6 h-1 bg-[#1B4378] inline-block"></span>
+            <span class="text-xs font-extrabold uppercase tracking-[0.18em] text-[#1B4378]">Milníky 1992 – 2026</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-[#050B14] uppercase tracking-tight">
+            Časová osa klubu
+          </h2>
+          <p class="text-xs sm:text-sm text-[#334155] mt-1.5">
+            Najeďte myší na zvolený rok na časové ose (na mobilu či tabletu klepněte) pro zobrazení podrobností z daného období.
+          </p>
+        </div>
+
+        <div id="interactive-timeline" class="relative pb-6 lg:pb-64"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =====================================================================
+       7. PATIČKA / KONTAKT (#kontakt)
+       ===================================================================== -->
+  <footer id="kontakt" class="bg-[#050B14] text-[#E2E8F0] border-t-4 border-[#1B4378]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-[#334155]">
+
+        <!-- Sloupec 1: Obě loga klubu + název -->
+        <div>
+          <div class="flex items-center gap-4 mb-3">
+            <img
+              src="img/logo.png"
+              alt="Bike Freaks Holice"
+              class="h-11 w-auto object-contain"
+              onerror="this.style.display='none';"
+            />
+            <img
+              src="img/logo-2.png"
+              alt="Znak Bike Freaks Holice"
+              class="h-11 w-auto object-contain border border-[#334155] bg-[#0A192F] p-1"
+              onerror="this.style.display='none';"
+            />
+          </div>
+          <div class="text-[#FFFFFF] font-black text-lg uppercase tracking-wider">
+            Cyklistický klub Bike Freaks Holice
+          </div>
+          <p class="mt-1.5 text-sm font-semibold text-[#94A3B8]">
+            Holice v Čechách • Založeno 1992
+          </p>
+        </div>
+
+        <!-- Sloupec 2: Kontakt a místo srazu -->
+        <div>
+          <h3 class="text-xs font-extrabold uppercase tracking-[0.16em] text-[#FFFFFF] mb-3">
+            Kontakt &amp; Místo srazu
+          </h3>
+          <ul class="space-y-2 text-sm text-[#E2E8F0]">
+            <li><span class="text-[#FFFFFF] font-semibold">Klub:</span> Cyklistický klub Bike Freaks Holice</li>
+            <li><span class="text-[#FFFFFF] font-semibold">Tréninkové zázemí:</span> V6, Holice v Čechách</li>
+            <li><span class="text-[#FFFFFF] font-semibold">Web:</span> www.bike-freaks.cz</li>
+          </ul>
+        </div>
+
+        <!-- Sloupec 3: Sekce webu -->
+        <div>
+          <h3 class="text-xs font-extrabold uppercase tracking-[0.16em] text-[#FFFFFF] mb-3">
+            Sekce webu
+          </h3>
+          <ul class="space-y-2 text-sm">
+            <li><button type="button" onclick="navigateToSection('treninky')" class="hover:text-[#FFFFFF] text-[#E2E8F0] transition-colors cursor-pointer">Tréninky</button></li>
+            <li><button type="button" onclick="navigateToSection('podpora')" class="hover:text-[#FFFFFF] text-[#E2E8F0] transition-colors cursor-pointer">Podpora</button></li>
+            <li><button type="button" onclick="navigateToSection('aktuality')" class="hover:text-[#FFFFFF] text-[#E2E8F0] transition-colors cursor-pointer">Aktuality</button></li>
+            <li><button type="button" onclick="openAboutPage()" class="hover:text-[#FFFFFF] text-[#E2E8F0] transition-colors cursor-pointer">O nás</button></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#94A3B8]">
+        <p>© 1992–2026 Cyklistický klub Bike Freaks Holice</p>
+        <p>Podporováno městem Holice a Pardubickým krajem</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       MODÁLNÍ OKNO A: DETAIL AKTUALITY (VEŘEJNÉ ČTENÍ + VŠECHNY FOTKY, BEZ MAZÁNÍ)
+       ===================================================================== -->
+  <div id="news-detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-[#050B14]/85" role="dialog" aria-modal="true" aria-labelledby="news-detail-title">
+    <div class="bg-[#FFFFFF] border-2 border-[#0A192F] max-w-2xl w-full overflow-hidden relative max-h-[92vh] flex flex-col">
+      <div class="bg-[#0A192F] text-[#FFFFFF] px-5 py-3.5 flex items-center justify-between border-b-2 border-[#1B4378] shrink-0">
+        <span id="news-detail-tag" class="text-xs font-extrabold uppercase tracking-wider text-[#E2E8F0]"></span>
+        <button
+          type="button"
+          onclick="closeNewsDetailModal()"
+          aria-label="Zavřít článek"
+          class="px-3 py-1 bg-[#1B4378] hover:bg-[#FFFFFF] hover:text-[#050B14] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+        >
+          Zavřít ✕
+        </button>
+      </div>
+
+      <div class="p-6 sm:p-8 overflow-y-auto space-y-5">
+        <div>
+          <div id="news-detail-date" class="text-xs font-bold uppercase tracking-wider text-[#334155] mb-1.5"></div>
+          <h3 id="news-detail-title" class="text-xl sm:text-2xl font-black text-[#050B14] uppercase tracking-tight"></h3>
+        </div>
+
+        <p id="news-detail-body" class="text-sm sm:text-base text-[#050B14] leading-relaxed whitespace-pre-line"></p>
+
+        <!-- Všechny připojené fotografie (1 až 3) zobrazené celé bez ořezu -->
+        <div id="news-detail-gallery" class="space-y-4 pt-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODÁLNÍ OKNO B: "+" EDITOR AKTUALIT (AŽ 3 FOTKY + OŘEZ + SKRYTÉ MAZÁNÍ)
+       ===================================================================== -->
+  <div id="news-plus-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-[#050B14]/85" role="dialog" aria-modal="true" aria-labelledby="news-plus-modal-title">
+    <div class="bg-[#FFFFFF] border-2 border-[#0A192F] max-w-2xl w-full overflow-hidden max-h-[94vh] flex flex-col">
+
+      <!-- Hlavička "+" modálu -->
+      <div class="bg-[#0A192F] text-[#FFFFFF] px-5 py-3.5 flex items-center justify-between border-b-2 border-[#1B4378] shrink-0">
+        <div class="flex items-center gap-3">
+          <button
+            id="delete-view-back-btn"
+            type="button"
+            onclick="switchPlusModalMode('create')"
+            class="hidden text-xs font-extrabold uppercase tracking-wider text-[#FFFFFF] bg-[#1B4378] hover:bg-[#FFFFFF] hover:text-[#050B14] px-2.5 py-1 transition-colors cursor-pointer"
+          >
+            ← Zpět na přidání aktuality
+          </button>
+          <span id="news-plus-modal-title" class="text-xs font-extrabold uppercase tracking-wider">
+            Nová aktualita
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onclick="closeNewsPlusModal()"
+          aria-label="Zavřít okno"
+          class="px-3 py-1 bg-[#1B4378] hover:bg-[#FFFFFF] hover:text-[#050B14] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+        >
+          Zavřít ✕
+        </button>
+      </div>
+
+      <!-- -----------------------------------------------------------------
+           REŽIM 1: VÝCHOZÍ FORMULÁŘ PRO PŘIDÁNÍ AKTUALITY (MAX 3 FOTKY + OŘEZ)
+           ----------------------------------------------------------------- -->
+      <div id="plus-modal-create-view" class="p-5 sm:p-6 overflow-y-auto space-y-5">
+
+        <div id="create-news-alert" class="hidden bg-[#0F294A] text-[#FFFFFF] border-l-4 border-[#FFFFFF] px-4 py-3 text-xs sm:text-sm font-medium"></div>
+
+        <form id="news-create-form" onsubmit="submitNewArticle(event)" class="space-y-4">
+
+          <!-- Nadpis + Datum -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+            <div class="sm:col-span-8">
+              <label for="article-title-input" class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14] mb-1.5">
+                Nadpis aktuality *
+              </label>
+              <input
+                id="article-title-input"
+                type="text"
+                required
+                placeholder="Např. Podzimní vyjížďka nebo výsledek ze závodu"
+                class="w-full px-3.5 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm focus:outline-none focus:border-[#1B4378]"
+              />
+            </div>
+
+            <div class="sm:col-span-4">
+              <label for="article-date-input" class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14] mb-1.5">
+                Datum
+              </label>
+              <input
+                id="article-date-input"
+                type="date"
+                required
+                class="w-full px-3 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm focus:outline-none focus:border-[#1B4378]"
+              />
+            </div>
+          </div>
+
+          <!-- Popis / text aktuality -->
+          <div>
+            <label for="article-body-input" class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14] mb-1.5">
+              Popis / text aktuality *
+            </label>
+            <textarea
+              id="article-body-input"
+              rows="3"
+              required
+              placeholder="Napište, kde jste byli, jak se akce povedla nebo jak dopadl závod..."
+              class="w-full px-3.5 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm focus:outline-none focus:border-[#1B4378]"
+            ></textarea>
+          </div>
+
+          <!-- Výběr až 3 fotografií -->
+          <div class="bg-[#F1F5F9] border-2 border-[#0A192F] p-4 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14]">
+                  Fotografie k aktualitě (max. 3 fotky)
+                </span>
+                <span class="block text-[11px] text-[#334155]">
+                  Kliknutím na vybranou fotku ji můžete níže oříznout nebo posunout.
+                </span>
+              </div>
+
+              <label class="inline-flex items-center justify-center px-3.5 py-2 bg-[#0A192F] hover:bg-[#1B4378] text-[#FFFFFF] text-xs font-extrabold uppercase tracking-wider cursor-pointer shrink-0 transition-colors">
+                <span>Vybrat fotky (max. 3)</span>
+                <input
+                  id="multi-photo-input"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onchange="handleMultiPhotoUpload(event)"
+                  class="hidden"
+                />
+              </label>
+            </div>
+
+            <!-- 3 vizuální sloty pro fotografie -->
+            <div id="photo-slots-grid" class="grid grid-cols-3 gap-3"></div>
+
+            <!-- Interaktivní ořezávací a přizpůsobovací plátno pro aktivní slot -->
+            <div id="crop-editor-panel" class="hidden pt-3 border-t border-[#E2E8F0] space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span id="crop-editor-slot-label" class="text-xs font-extrabold uppercase tracking-wider text-[#0A192F]">
+                  Úprava: Fotka 1 (hlavní)
+                </span>
+
+                <!-- Přepínač formátu ořezu -->
+                <div class="flex flex-wrap gap-1">
+                  <button
+                    type="button"
+                    data-crop-mode="contain"
+                    onclick="setActiveSlotCropMode('contain')"
+                    class="crop-mode-btn px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider border border-[#0A192F] bg-[#0A192F] text-[#FFFFFF] cursor-pointer"
+                  >
+                    Celá fotka (bez ořezu)
+                  </button>
+                  <button
+                    type="button"
+                    data-crop-mode="1:1"
+                    onclick="setActiveSlotCropMode('1:1')"
+                    class="crop-mode-btn px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider border border-[#94A3B8] bg-[#FFFFFF] text-[#050B14] cursor-pointer"
+                  >
+                    Čtverec 1:1
+                  </button>
+                  <button
+                    type="button"
+                    data-crop-mode="16:9"
+                    onclick="setActiveSlotCropMode('16:9')"
+                    class="crop-mode-btn px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider border border-[#94A3B8] bg-[#FFFFFF] text-[#050B14] cursor-pointer"
+                  >
+                    Na šířku 16:9
+                  </button>
+                </div>
+              </div>
+
+              <!-- Interaktivní plátno s podporou tažení myší i prstem -->
+              <div class="bg-[#050B14] border-2 border-[#0A192F] flex items-center justify-center p-2 overflow-hidden">
+                <canvas
+                  id="photo-crop-canvas"
+                  class="max-w-full max-h-60 cursor-move touch-none block"
+                ></canvas>
+              </div>
+
+              <!-- Ovládání přiblížení (Zoom 100 % – 250 %) + nápověda posunu -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2.5 flex-1">
+                  <label for="photo-zoom-slider" class="font-bold uppercase tracking-wider text-[#050B14] shrink-0">
+                    Přiblížení: <span id="photo-zoom-value">100 %</span>
+                  </label>
+                  <input
+                    id="photo-zoom-slider"
+                    type="range"
+                    min="100"
+                    max="250"
+                    value="100"
+                    oninput="setActiveSlotZoom(this.value)"
+                    class="w-full accent-[#0A192F] cursor-pointer"
+                  />
+                </div>
+                <span class="text-[11px] text-[#334155]">
+                  Tažením po fotce posunete výřez
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tlačítko pro publikování -->
+          <button
+            type="submit"
+            class="w-full bg-[#0A192F] hover:bg-[#1B4378] text-[#FFFFFF] font-extrabold text-sm sm:text-base uppercase tracking-wider py-3.5 px-5 transition-colors cursor-pointer"
+          >
+            Publikovat aktualitu
+          </button>
+        </form>
+
+        <!-- Nenápadný skrytý odkaz pro správce na smazání aktuality -->
+        <div class="pt-3 border-t border-[#E2E8F0] flex justify-end">
+          <button
+            type="button"
+            onclick="switchPlusModalMode('delete')"
+            class="text-[11px] font-medium text-[#94A3B8] hover:text-[#334155] underline transition-colors cursor-pointer"
+          >
+            Vymazat aktualitu
+          </button>
+        </div>
+
+      </div>
+
+      <!-- -----------------------------------------------------------------
+           REŽIM 2: SKRYTÁ SPRÁVA MAZÁNÍ AKTUALIT (ČERVENÝ KŘÍŽEK A POTVRZENÍ)
+           ----------------------------------------------------------------- -->
+      <div id="plus-modal-delete-view" class="hidden p-5 sm:p-6 overflow-y-auto space-y-4">
+        <p class="text-xs sm:text-sm text-[#334155]">
+          Najeďte myší na aktualitu, kterou chcete odstranit, a klikněte na červený křížek <strong class="text-[#050B14]">✕</strong> vpravo.
+        </p>
+
+        <!-- Potvrzovací dialog přímo uvnitř modálu -->
+        <div id="delete-confirm-banner" class="hidden border-2 border-[#DC2626] bg-[#FEF2F2] p-4 space-y-3">
+          <p id="delete-confirm-question" class="text-xs sm:text-sm font-bold text-[#050B14]"></p>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onclick="confirmDeleteSelectedArticle()"
+              class="px-4 py-2 bg-[#DC2626] hover:bg-[#B91C1C] text-[#FFFFFF] text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer"
+            >
+              Potvrdit smazání
+            </button>
+            <button
+              type="button"
+              onclick="cancelDeleteConfirmation()"
+              class="px-4 py-2 bg-[#FFFFFF] hover:bg-[#E2E8F0] text-[#050B14] border border-[#94A3B8] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+            >
+              Zrušit
+            </button>
+          </div>
+        </div>
+
+        <!-- Seznam všech aktualit ke smazání -->
+        <div id="delete-articles-list" class="space-y-2.5"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODÁLNÍ OKNO C: EDITOR ROZPISU TRÉNINKŮ (BEZ HESLA, S TÝDENNÍM OPAKOVÁNÍM)
+       ===================================================================== -->
+  <div id="training-editor-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-[#050B14]/85" role="dialog" aria-modal="true" aria-labelledby="training-modal-title">
+    <div class="bg-[#FFFFFF] border-2 border-[#0A192F] max-w-2xl w-full overflow-hidden max-h-[92vh] flex flex-col">
+
+      <!-- Hlavička modálu -->
+      <div class="bg-[#0A192F] text-[#FFFFFF] px-5 py-3.5 flex items-center justify-between border-b-2 border-[#1B4378] shrink-0">
+        <span id="training-modal-title" class="text-xs font-extrabold uppercase tracking-wider">
+          Správa rozpisu tréninků
+        </span>
+        <button
+          type="button"
+          onclick="closeTrainingEditorModal()"
+          class="px-3 py-1 bg-[#1B4378] hover:bg-[#FFFFFF] hover:text-[#050B14] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+        >
+          Zavřít ✕
+        </button>
+      </div>
+
+      <div class="p-5 sm:p-6 overflow-y-auto space-y-6">
+
+        <!-- Formulář pro přidání nebo úpravu tréninku -->
+        <form id="training-rule-form" onsubmit="saveTrainingRule(event)" class="bg-[#F1F5F9] border-2 border-[#0A192F] p-4 sm:p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-[#E2E8F0] pb-2">
+            <h3 id="training-form-heading" class="text-sm font-black uppercase tracking-wider text-[#050B14]">
+              Přidat nový trénink
+            </h3>
+            <button
+              id="training-cancel-edit-btn"
+              type="button"
+              onclick="resetTrainingForm()"
+              class="hidden text-xs font-bold underline text-[#334155] hover:text-[#050B14] cursor-pointer"
+            >
+              Zrušit úpravu
+            </button>
+          </div>
+
+          <input type="hidden" id="training-edit-id" value="" />
+
+          <!-- Řádek 1: Datum + Čas startu -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label for="tr-date-input" class="text-xs font-extrabold uppercase tracking-wider text-[#050B14]">
+                  Datum
+                </label>
+                <span id="tr-weekday-badge" class="text-[11px] font-bold text-[#1B4378] uppercase"></span>
+              </div>
+              <input
+                id="tr-date-input"
+                type="date"
+                required
+                onchange="updateTrainingWeekdayPreview()"
+                class="w-full px-3 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm focus:outline-none focus:border-[#1B4378]"
+              />
+            </div>
+
+            <div>
+              <label for="tr-time-input" class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14] mb-1">
+                Čas startu
+              </label>
+              <input
+                id="tr-time-input"
+                type="time"
+                required
+                value="16:30"
+                class="w-full px-3 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm focus:outline-none focus:border-[#1B4378]"
+              />
+            </div>
+          </div>
+
+          <!-- Řádek 2: Disciplína + Místo + Délka -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="tr-discipline-select" class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14] mb-1">
+                Disciplína
+              </label>
+              <select
+                id="tr-discipline-select"
+                class="w-full px-3 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm font-semibold focus:outline-none focus:border-[#1B4378]"
+              >
+                <option value="Trial">Trial</option>
+                <option value="Horská kola">Horská kola</option>
+                <option value="Silniční kola">Silniční kola</option>
+                <option value="Hala">Hala</option>
+                <option value="Tělocvična">Tělocvična</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="tr-location-select" class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14] mb-1">
+                Místo
+              </label>
+              <select
+                id="tr-location-select"
+                onchange="toggleCustomLocationInput()"
+                class="w-full px-3 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm font-semibold focus:outline-none focus:border-[#1B4378]"
+              >
+                <option value="V6">V6</option>
+                <option value="Holice">Holice</option>
+                <option value="Staré Holice">Staré Holice</option>
+                <option value="Orlické hory">Orlické hory</option>
+                <option value="__custom__">Vlastní místo...</option>
+              </select>
+              <input
+                id="tr-location-custom"
+                type="text"
+                placeholder="Zadejte místo srazu"
+                class="hidden mt-2 w-full px-3 py-2 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-xs focus:outline-none focus:border-[#1B4378]"
+              />
+            </div>
+
+            <div>
+              <label for="tr-duration-select" class="block text-xs font-extrabold uppercase tracking-wider text-[#050B14] mb-1">
+                Délka
+              </label>
+              <select
+                id="tr-duration-select"
+                class="w-full px-3 py-2.5 border-2 border-[#0A192F] bg-[#FFFFFF] text-[#050B14] text-sm font-semibold focus:outline-none focus:border-[#1B4378]"
+              >
+                <option value="1 hod">1 hod</option>
+                <option value="1,5 hod" selected>1,5 hod</option>
+                <option value="2 hod">2 hod</option>
+                <option value="2,5 hod">2,5 hod</option>
+                <option value="3 hod">3 hod</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Zaškrtávací pole: Opakovat každý týden -->
+          <div class="pt-1">
+            <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+              <input
+                id="tr-recurring-checkbox"
+                type="checkbox"
+                checked
+                class="w-4 h-4 accent-[#0A192F] border-2 border-[#0A192F] cursor-pointer"
+              />
+              <span class="text-xs sm:text-sm font-bold text-[#050B14]">
+                Opakovat každý týden (automaticky se obnovuje týden co týden)
+              </span>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-[#0A192F] hover:bg-[#1B4378] text-[#FFFFFF] font-extrabold text-xs sm:text-sm uppercase tracking-wider py-3 px-5 transition-colors cursor-pointer"
+          >
+            Uložit trénink do rozpisu
+          </button>
+        </form>
+
+        <!-- Seznam uložených pravidel tréninků -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-[#050B14]">
+              Uložené tréninky a pravidla
+            </h3>
+            <button
+              type="button"
+              onclick="restoreDefaultTrainings()"
+              class="text-[11px] font-semibold text-[#334155] hover:text-[#050B14] underline cursor-pointer"
+            >
+              Obnovit výchozí rozpis
+            </button>
+          </div>
+          <div id="saved-training-rules-list" class="space-y-2"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       JAVASCRIPT: KOMPLETNÍ LOGIKA WEBU, ROZPISU NA 7 DNÍ, OŘEZU A AKTUALIT
+       ===================================================================== -->
+  <script>
+    const TRAININGS_STORAGE_KEY = "bf_holice_trainings_v2";
+    const NEWS_STORAGE_KEY = "bf_holice_news_v2";
+
+    const CZECH_DAYS_SHORT = ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"];
+    const CZECH_DAYS_FULL = ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
+
+    // Úvodní fotografie (tichá kontrola existence ve složce img/)
+    const HERO_IMAGE_PATHS = [
+      { url: "img/hero-1.jpg", alt: "Cyklistický klub Bike Freaks Holice" },
+      { url: "img/hero-2.jpg", alt: "Trénink Bike Freaks Holice" },
+      { url: "img/hero-3.jpg", alt: "Cyklistika v Holicích – Bike Freaks" }
+    ];
+
+    // Výchozí pravidelné tréninky
+    const DEFAULT_TRAINING_RULES = [
+      {
+        id: "tr-default-1",
+        date: "2026-11-16",
+        weekday: 1, // Pondělí
+        time: "16:30",
+        discipline: "Trial",
+        location: "V6",
+        duration: "1,5 hod",
+        recurring: true
+      },
+      {
+        id: "tr-default-2",
+        date: "2026-11-18",
+        weekday: 3, // Středa
+        time: "16:30",
+        discipline: "Horská kola",
+        location: "V6",
+        duration: "1,5 hod",
+        recurring: true
+      },
+      {
+        id: "tr-default-3",
+        date: "2026-11-19",
+        weekday: 4, // Čtvrtek
+        time: "17:30",
+        discipline: "Hala",
+        location: "Holice",
+        duration: "1,5 hod",
+        recurring: true
+      },
+      {
+        id: "tr-default-4",
+        date: "2026-11-20",
+        weekday: 5, // Pátek
+        time: "17:00",
+        discipline: "Tělocvična",
+        location: "Holice",
+        duration: "1,5 hod",
+        recurring: true
+      },
+      {
+        id: "tr-default-5",
+        date: "2026-11-21",
+        weekday: 6, // Sobota
+        time: "09:30",
+        discipline: "Silniční kola",
+        location: "Staré Holice",
+        duration: "2,5 hod",
+        recurring: true
+      }
+    ];
+
+    // Výchozí 4 aktuality (každá podporuje pole photos až se 3 snímky)
+    const DEFAULT_NEWS_ARTICLES = [
+      {
+        id: "news-4",
+        dateISO: "2026-11-15",
+        dateDisplay: "15. 11. 2026",
+        title: "Týmový výšlap: Šerlich a hřeben Orlických hor",
+        excerpt: "Kola jsme tentokrát vyměnili za pohorky a vyrazili společně do Orlických hor. Přes Šerlich jsme vystoupali až na rozhlednu Vrchmezí na česko-polské hranici.",
+        fullText: "Kola jsme tentokrát vyměnili za pohorky a vyrazili společně na týmový výšlap do Orlických hor. Ze sedla Šerlich jsme se vydali po hřebenové trase až na rozhlednu Vrchmezí ležící přímo na česko-polské hranici. Společný den v horách mimo tréninkový prostor V6 posílil týmovou partu a nabídl výhledy po celém hřebeni Orlických hor.",
+        photos: ["img/clanek-4.jpg"]
+      },
+      {
+        id: "news-3",
+        dateISO: "2026-10-18",
+        dateDisplay: "18. 10. 2026",
+        title: "Mistr ČR – Vojta Hendrych",
+        excerpt: "Limitovaná série 11 triček od Kalassportswear má od soboty své majitele. MČR v cyklotrialu UCI hostily Hamry nad Sázavou.",
+        fullText: "Limitovaná série 11 triček od Kalassportswear má od soboty své majitele. MČR v cyklotrialu UCI hostily Hamry nad Sázavou. Vojta Hendrych v barvách Bike Freaks Holice předvedl jistý a soustředěný výkon ve všech sekcích a vybojoval mistrovský titul.",
+        photos: ["img/clanek-3.jpg"]
+      },
+      {
+        id: "news-2",
+        dateISO: "2026-09-22",
+        dateDisplay: "22. 9. 2026",
+        title: "SP Norsko",
+        excerpt: "Jen 30 bodů od postupu do semifinále chybělo Vojtovi na jeho prvním Svěťáku. V konečném pořadí byl na pěkném 28. místě.",
+        fullText: "Jen 30 bodů od postupu do semifinále chybělo Vojtovi na jeho prvním Svěťáku. V konkurenci světové trialové špičky v Norsku obsadil v konečném pořadí pěkné 28. místo a přivezl do Holic cenné zkušenosti z mezinárodní scény.",
+        photos: ["img/clanek-2.jpg"]
+      },
+      {
+        id: "news-1",
+        dateISO: "2026-09-06",
+        dateDisplay: "6. 9. 2026",
+        title: "MČR XCO Harrachov",
+        excerpt: "Adam Papoušek zajel skvělé 16. místo v kat. Kadet. Markovi Nechutovi se tentokrát nedařilo, jak chtěl – 34. flek v nabité konkurenci.",
+        fullText: "Na náročných tratích MČR XCO v Harrachově zajel Adam Papoušek skvělé 16. místo v kat. Kadet. Markovi Nechutovi se tentokrát nedařilo, jak chtěl – 34. flek v nabité konkurenci je však další důležitou zkušeností v sezóně horských kol.",
+        photos: ["img/clanek-1.jpg"]
+      }
+    ];
+
+    // Milníky interaktivní časové osy v sekci O nás (1992, 2000, 2008, 2016, 2022, 2026)
+    const TIMELINE_MILESTONES = [
+      {
+        year: "1992",
+        title: "Založení Bike Freaks v Holicích",
+        summary: "Vznik holické party cyklistických nadšenců kolem horských a trialových kol. První společné vyjížďky po okolí Holic a položení základů klubu.",
+        highlight: "Počátek klubové tradice v Holicích"
+      },
+      {
+        year: "2000",
+        title: "Rozvoj horské a silniční cyklistiky",
+        summary: "Rozšíření členské základny o jezdce na horských i silničních kolech. Pravidelné skupinové vyjížďky a společná příprava napříč regionem.",
+        highlight: "Propojení MTB a silnice"
+      },
+      {
+        year: "2008",
+        title: "Pravidelné tréninky dětí a mládeže",
+        summary: "Systematické zapojení dětí a mládeže do klubových tréninků v Holicích. Důraz na techniku ovládání kola, bezpečnost a radost z pohybu.",
+        highlight: "Výchova mladých jezdců v Holicích"
+      },
+      {
+        year: "2016",
+        title: "Tréninkové zázemí V6 a cyklotrial",
+        summary: "Rozvoj tréninkového prostoru v lokalitě V6 v Holicích. Cyklotrial se stává klíčovou disciplínou pro rozvoj rovnováhy a techniky všech kategorií.",
+        highlight: "Tréninková základna V6 v Holicích"
+      },
+      {
+        year: "2022",
+        title: "30 let klubu a nová generace jezdců",
+        summary: "Tři dekády nepřetržité cyklistické činnosti v Holicích. Nová generace mladých závodníků navazuje na zkušenosti zakládajících členů.",
+        highlight: "30 let Bike Freaks Holice"
+      },
+      {
+        year: "2026",
+        title: "Mistrovské tituly i otevřená parta",
+        summary: "Odchovanci klubu vozí medaile z Mistrovství ČR a startují na Světovém poháru UCI. Nadále pravidelně trénujeme mládež i dospělé v Holicích.",
+        highlight: "Reprezentace města Holice"
+      }
+    ];
+
+    /**
+     * =========================================================================
+     * APLIKAČNÍ STAV
+     * =========================================================================
+     */
+    let loadedHeroImages = [];
+    let currentSlideIndex = 0;
+    let slideInterval = null;
+
+    let trainingRules = [];
+    let activeDisciplineFilter = "all";
+
+    let newsArticles = [];
+    let photoSlots = [null, null, null]; // Až 3 sloty pro fotografie v editoru "+"
+    let activePhotoSlotIndex = 0;
+    let isDraggingCropCanvas = false;
+    let dragStartClientX = 0;
+    let dragStartClientY = 0;
+    let dragStartPanX = 0;
+    let dragStartPanY = 0;
+    let articlePendingDeleteId = null;
+
+    let activeTimelineYear = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      trainingRules = loadTrainingRulesFromStorage();
+      newsArticles = loadNewsFromStorage();
+
+      preloadHeroImagesSilently();
+      renderRolling7DaySchedule();
+      renderNewsGrid();
+      renderInteractiveTimeline();
+      setupCropCanvasPointerEvents();
+
+      document.getElementById("mobile-menu-btn").addEventListener("click", toggleMobileMenu);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeNewsDetailModal();
+          closeNewsPlusModal();
+          closeTrainingEditorModal();
+          closeTimelinePopup();
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("[data-timeline-node]")) {
+          closeTimelinePopup();
+        }
+      });
+    });
+
+    /* =========================================================================
+       1. TICHÉ PŘEDNAČTENÍ HERO FOTOGRAFIÍ
+       ========================================================================= */
+    function preloadHeroImagesSilently() {
+      const checks = HERO_IMAGE_PATHS.map((item) => {
+        return new Promise((resolve) => {
+          const probe = new Image();
+          probe.onload = () => resolve(item);
+          probe.onerror = () => resolve(null);
+          probe.src = item.url;
+        });
+      });
+
+      Promise.all(checks).then((results) => {
+        loadedHeroImages = results.filter(Boolean);
+        if (loadedHeroImages.length > 0) {
+          mountHeroPhotoSlideshow(loadedHeroImages);
+        }
+      });
+    }
+
+    function mountHeroPhotoSlideshow(images) {
+      const container = document.getElementById("hero-slides-container");
+      const overlay = document.getElementById("hero-photo-overlay");
+      const dotsContainer = document.getElementById("hero-dots");
+
+      container.innerHTML = "";
+      dotsContainer.innerHTML = "";
+
+      images.forEach((slide, index) => {
+        const slideDiv = document.createElement("div");
+        slideDiv.className = `hero-slide absolute inset-0 w-full h-full ${index === 0 ? "active" : "inactive"}`;
+
+        const img = document.createElement("img");
+        img.src = slide.url;
+        img.alt = slide.alt;
+        img.className = "w-full h-full object-cover object-center";
+
+        slideDiv.appendChild(img);
+        container.appendChild(slideDiv);
+
+        if (images.length > 1) {
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.setAttribute("aria-label", `Snímek ${index + 1}`);
+          dot.className = `h-2 transition-all duration-300 cursor-pointer ${index === 0 ? "w-12 bg-[#FFFFFF]" : "w-5 bg-[#FFFFFF]/40 hover:bg-[#FFFFFF]/80"}`;
+          dot.addEventListener("click", () => goToSlide(index));
+          dotsContainer.appendChild(dot);
+        }
+      });
+
+      container.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+
+      if (images.length > 1) {
+        dotsContainer.classList.remove("hidden");
+        startSlideTimer();
+
+        const heroSection = document.getElementById("uvod");
+        heroSection.addEventListener("mouseenter", () => clearInterval(slideInterval));
+        heroSection.addEventListener("mouseleave", startSlideTimer);
+      }
+    }
+
+    function startSlideTimer() {
+      clearInterval(slideInterval);
+      if (loadedHeroImages.length <= 1) return;
+      slideInterval = setInterval(() => {
+        const nextIndex = (currentSlideIndex + 1) % loadedHeroImages.length;
+        goToSlide(nextIndex);
+      }, 5000);
+    }
+
+    function goToSlide(index) {
+      currentSlideIndex = index;
+      const slides = document.querySelectorAll(".hero-slide");
+      const dots = document.querySelectorAll("#hero-dots button");
+
+      slides.forEach((el, i) => {
+        if (i === index) {
+          el.classList.remove("inactive");
+          el.classList.add("active");
+        } else {
+          el.classList.remove("active");
+          el.classList.add("inactive");
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        dot.className = i === index
+          ? "h-2 w-12 bg-[#FFFFFF] transition-all duration-300 cursor-pointer"
+          : "h-2 w-5 bg-[#FFFFFF]/40 hover:bg-[#FFFFFF]/80 transition-all duration-300 cursor-pointer";
+      });
+    }
+
+    /* =========================================================================
+       2. NAVIGACE A PŘEPÍNÁNÍ CELOSTRÁNKOVÉ SEKCE "O NÁS"
+       ========================================================================= */
+    function updateActiveNav(activeKey) {
+      document.querySelectorAll(".nav-link").forEach((btn) => {
+        if (btn.dataset.nav === activeKey) {
+          btn.classList.remove("text-[#E2E8F0]", "hover:bg-[#0F294A]");
+          btn.classList.add("text-[#FFFFFF]", "bg-[#1B4378]");
+        } else {
+          btn.classList.remove("bg-[#1B4378]");
+          if (btn.dataset.nav !== "kontakt") {
+            btn.classList.add("text-[#E2E8F0]", "hover:bg-[#0F294A]");
+          }
+        }
+      });
+    }
+
+    function navigateToSection(sectionId) {
+      const mainView = document.getElementById("main-landing-view");
+      const aboutView = document.getElementById("about-page-view");
+
+      if (mainView.classList.contains("hidden")) {
+        aboutView.classList.add("hidden");
+        mainView.classList.remove("hidden");
+      }
+
+      updateActiveNav(sectionId === "uvod" ? "" : sectionId);
+
+      if (sectionId === "uvod") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function openAboutPage() {
+      const mainView = document.getElementById("main-landing-view");
+      const aboutView = document.getElementById("about-page-view");
+
+      mainView.classList.add("hidden");
+      aboutView.classList.remove("hidden");
+      updateActiveNav("onas");
+      closeTimelinePopup();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function closeAboutPage() {
+      navigateToSection("uvod");
+    }
+
+    /* =========================================================================
+       3. ROZPIS TRÉNINKŮ NA NÁSLEDUJÍCÍCH 7 DNÍ + EDITOR BEZ HESLA
+       ========================================================================= */
+    function loadTrainingRulesFromStorage() {
+      try {
+        const raw = localStorage.getItem(TRAININGS_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULT_TRAINING_RULES));
+    }
+
+    function persistTrainingRulesToStorage() {
+      try {
+        localStorage.setItem(TRAININGS_STORAGE_KEY, JSON.stringify(trainingRules));
+      } catch (e) {}
+    }
+
+    function getTodayISO() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseLocalISO(isoStr) {
+      const [y, m, d] = isoStr.split("-").map(Number);
+      return new Date(y, m - 1, d, 0, 0, 0, 0);
+    }
+
+    function formatCzechDateWithWeekday(dateObj) {
+      const dayShort = CZECH_DAYS_SHORT[dateObj.getDay()];
+      return `${dayShort} ${dateObj.getDate()}. ${dateObj.getMonth() + 1}. ${dateObj.getFullYear()}`;
+    }
+
+    function generateUpcoming7DaysTrainings() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const occurrences = [];
+
+      for (let offset = 0; offset < 7; offset++) {
+        const currentDay = new Date(today);
+        currentDay.setDate(today.getDate() + offset);
+        const y = currentDay.getFullYear();
+        const m = String(currentDay.getMonth() + 1).padStart(2, "0");
+        const d = String(currentDay.getDate()).padStart(2, "0");
+        const currentISO = `${y}-${m}-${d}`;
+        const currentWeekday = currentDay.getDay();
+
+        trainingRules.forEach((rule) => {
+          const matchesRecurring = rule.recurring && Number(rule.weekday) === currentWeekday;
+          const matchesOneOff = !rule.recurring && rule.date === currentISO;
+
+          if (matchesRecurring || matchesOneOff) {
+            occurrences.push({
+              dateISO: currentISO,
+              dateLabel: formatCzechDateWithWeekday(currentDay),
+              time: rule.time || "16:30",
+              discipline: rule.discipline || "Trial",
+              location: rule.location || "V6",
+              duration: rule.duration || "1,5 hod"
+            });
+          }
+        });
+      }
+
+      occurrences.sort((a, b) => {
+        if (a.dateISO !== b.dateISO) return a.dateISO.localeCompare(b.dateISO);
+        return a.time.localeCompare(b.time);
+      });
+
+      return occurrences;
+    }
+
+    function setScheduleFilter(filter) {
+      activeDisciplineFilter = filter;
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        if (btn.dataset.filter === filter) {
+          btn.className = "filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-[#0A192F] text-[#FFFFFF] border border-[#0A192F] transition-colors cursor-pointer";
+        } else {
+          btn.className = "filter-btn skew-badge px-3.5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#FFFFFF] text-[#050B14] border border-[#94A3B8] hover:border-[#0A192F] transition-colors cursor-pointer";
+        }
+      });
+      renderRolling7DaySchedule();
+    }
+
+    function renderRolling7DaySchedule() {
+      const mobileContainer = document.getElementById("schedule-mobile-cards");
+      const desktopBody = document.getElementById("schedule-desktop-body");
+
+      const allUpcoming = generateUpcoming7DaysTrainings();
+      const filtered = allUpcoming.filter((item) => {
+        if (activeDisciplineFilter === "all") return true;
+        return item.discipline.toLowerCase() === activeDisciplineFilter.toLowerCase();
+      });
+
+      if (filtered.length === 0) {
+        const emptyMsg = `<div class="p-8 text-center text-[#334155] text-sm bg-[#FFFFFF] border border-[#94A3B8]">V následujících 7 dnech nejsou pro zvolenou disciplínu vypsány žádné tréninky.</div>`;
+        mobileContainer.innerHTML = emptyMsg;
+        desktopBody.innerHTML = `<tr><td colspan="5">${emptyMsg}</td></tr>`;
+        return;
+      }
+
+      // Mobilní karty (bez tlačítek pro úpravu uvnitř řádků)
+      mobileContainer.innerHTML = filtered
+        .map(
+          (item) => `
+            <article class="bg-[#FFFFFF] border-2 border-[#0A192F] p-4 flex flex-col gap-3">
+              <div class="flex items-center justify-between gap-2 border-b border-[#E2E8F0] pb-2">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-[#0A192F]">${escapeHtml(item.dateLabel)}</span>
+                <span class="text-base font-black text-[#050B14]">${escapeHtml(item.time)}</span>
+              </div>
+
+              <div class="flex items-center justify-between gap-2">
+                <span class="inline-block bg-[#1B4378] text-[#FFFFFF] text-xs font-extrabold uppercase tracking-wider px-3 py-1 skew-badge">
+                  <span class="skew-inner">${escapeHtml(item.discipline)}</span>
+                </span>
+                <span class="text-xs font-semibold text-[#334155]">${escapeHtml(item.duration)}</span>
+              </div>
+
+              <div class="text-xs sm:text-sm font-bold text-[#050B14] pt-1">
+                Místo: <span class="font-extrabold text-[#1B4378]">${escapeHtml(item.location)}</span>
+              </div>
+            </article>
+          `
+        )
+        .join("");
+
+      // Desktopová tabulka (bez tlačítek pro úpravu uvnitř řádků)
+      desktopBody.innerHTML = filtered
+        .map(
+          (item) => `
+            <tr class="hover:bg-[#F1F5F9] transition-colors">
+              <td class="py-4 px-5 font-bold text-[#050B14] whitespace-nowrap">${escapeHtml(item.dateLabel)}</td>
+              <td class="py-4 px-4 font-black text-[#0A192F] whitespace-nowrap">${escapeHtml(item.time)}</td>
+              <td class="py-4 px-5">
+                <span class="inline-block bg-[#1B4378] text-[#FFFFFF] text-xs font-extrabold uppercase tracking-wider px-3 py-1 skew-badge">
+                  <span class="skew-inner">${escapeHtml(item.discipline)}</span>
+                </span>
+              </td>
+              <td class="py-4 px-5 font-bold text-[#050B14]">${escapeHtml(item.location)}</td>
+              <td class="py-4 px-5 text-[#334155] font-medium text-right">${escapeHtml(item.duration)}</td>
+            </tr>
+          `
+        )
+        .join("");
+    }
+
+    function openTrainingEditorModal(focusForm) {
+      resetTrainingForm();
+      renderSavedTrainingRulesList();
+
+      const modal = document.getElementById("training-editor-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+
+      if (focusForm) {
+        setTimeout(() => {
+          const dateInput = document.getElementById("tr-date-input");
+          if (dateInput) dateInput.focus();
+        }, 50);
+      }
+    }
+
+    function closeTrainingEditorModal() {
+      const modal = document.getElementById("training-editor-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function resetTrainingForm() {
+      document.getElementById("training-edit-id").value = "";
+      document.getElementById("training-form-heading").textContent = "Přidat nový trénink";
+      document.getElementById("training-cancel-edit-btn").classList.add("hidden");
+
+      const dateInput = document.getElementById("tr-date-input");
+      dateInput.value = getTodayISO();
+      updateTrainingWeekdayPreview();
+
+      document.getElementById("tr-time-input").value = "16:30";
+      document.getElementById("tr-discipline-select").value = "Trial";
+      document.getElementById("tr-location-select").value = "V6";
+      document.getElementById("tr-location-custom").value = "";
+      document.getElementById("tr-location-custom").classList.add("hidden");
+      document.getElementById("tr-duration-select").value = "1,5 hod";
+      document.getElementById("tr-recurring-checkbox").checked = true;
+    }
+
+    function updateTrainingWeekdayPreview() {
+      const val = document.getElementById("tr-date-input").value;
+      const badge = document.getElementById("tr-weekday-badge");
+      if (!val) {
+        badge.textContent = "";
+        return;
+      }
+      const dt = parseLocalISO(val);
+      badge.textContent = CZECH_DAYS_FULL[dt.getDay()];
+    }
+
+    function toggleCustomLocationInput() {
+      const select = document.getElementById("tr-location-select");
+      const customInput = document.getElementById("tr-location-custom");
+      if (select.value === "__custom__") {
+        customInput.classList.remove("hidden");
+        customInput.required = true;
+        customInput.focus();
+      } else {
+        customInput.classList.add("hidden");
+        customInput.required = false;
+      }
+    }
+
+    function saveTrainingRule(event) {
+      event.preventDefault();
+
+      const editId = document.getElementById("training-edit-id").value;
+      const dateVal = document.getElementById("tr-date-input").value;
+      const timeVal = document.getElementById("tr-time-input").value;
+      const disciplineVal = document.getElementById("tr-discipline-select").value;
+      const locationSelect = document.getElementById("tr-location-select").value;
+      const customLocVal = document.getElementById("tr-location-custom").value.trim();
+      const durationVal = document.getElementById("tr-duration-select").value;
+      const recurringVal = document.getElementById("tr-recurring-checkbox").checked;
+
+      const finalLocation = locationSelect === "__custom__" ? (customLocVal || "Holice") : locationSelect;
+      const dt = parseLocalISO(dateVal);
+      const weekday = dt.getDay();
+
+      if (editId) {
+        const idx = trainingRules.findIndex((r) => r.id === editId);
+        if (idx !== -1) {
+          trainingRules[idx] = {
+            ...trainingRules[idx],
+            date: dateVal,
+            weekday,
+            time: timeVal,
+            discipline: disciplineVal,
+            location: finalLocation,
+            duration: durationVal,
+            recurring: recurringVal
+          };
+        }
+      } else {
+        trainingRules.push({
+          id: "tr-" + Date.now(),
+          date: dateVal,
+          weekday,
+          time: timeVal,
+          discipline: disciplineVal,
+          location: finalLocation,
+          duration: durationVal,
+          recurring: recurringVal
+        });
+      }
+
+      persistTrainingRulesToStorage();
+      renderRolling7DaySchedule();
+      resetTrainingForm();
+      renderSavedTrainingRulesList();
+    }
+
+    function editTrainingRule(id) {
+      const rule = trainingRules.find((r) => r.id === id);
+      if (!rule) return;
+
+      document.getElementById("training-edit-id").value = rule.id;
+      document.getElementById("training-form-heading").textContent = "Upravit vybraný trénink";
+      document.getElementById("training-cancel-edit-btn").classList.remove("hidden");
+
+      document.getElementById("tr-date-input").value = rule.date;
+      updateTrainingWeekdayPreview();
+      document.getElementById("tr-time-input").value = rule.time;
+      document.getElementById("tr-discipline-select").value = rule.discipline;
+
+      const presetLocations = ["V6", "Holice", "Staré Holice", "Orlické hory"];
+      if (presetLocations.includes(rule.location)) {
+        document.getElementById("tr-location-select").value = rule.location;
+        document.getElementById("tr-location-custom").classList.add("hidden");
+        document.getElementById("tr-location-custom").required = false;
+      } else {
+        document.getElementById("tr-location-select").value = "__custom__";
+        const customInput = document.getElementById("tr-location-custom");
+        customInput.value = rule.location;
+        customInput.classList.remove("hidden");
+        customInput.required = true;
+      }
+
+      document.getElementById("tr-duration-select").value = rule.duration;
+      document.getElementById("tr-recurring-checkbox").checked = Boolean(rule.recurring);
+
+      document.getElementById("training-rule-form").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function deleteTrainingRule(id) {
+      trainingRules = trainingRules.filter((r) => r.id !== id);
+      persistTrainingRulesToStorage();
+      renderRolling7DaySchedule();
+      renderSavedTrainingRulesList();
+      if (document.getElementById("training-edit-id").value === id) {
+        resetTrainingForm();
+      }
+    }
+
+    function restoreDefaultTrainings() {
+      trainingRules = JSON.parse(JSON.stringify(DEFAULT_TRAINING_RULES));
+      persistTrainingRulesToStorage();
+      renderRolling7DaySchedule();
+      renderSavedTrainingRulesList();
+      resetTrainingForm();
+    }
+
+    function renderSavedTrainingRulesList() {
+      const container = document.getElementById("saved-training-rules-list");
+      if (trainingRules.length === 0) {
+        container.innerHTML = `<div class="p-4 text-xs text-[#334155] bg-[#F1F5F9] border border-[#E2E8F0]">Žádné uložené tréninky. Přidejte první pomocí formuláře výše.</div>`;
+        return;
+      }
+
+      container.innerHTML = trainingRules
+        .map((rule) => {
+          const dayLabel = rule.recurring
+            ? `Každé ${CZECH_DAYS_FULL[rule.weekday].toLowerCase()}`
+            : formatCzechDateWithWeekday(parseLocalISO(rule.date));
+
+          return `
+            <div class="bg-[#FFFFFF] border border-[#0A192F] p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-[#1B4378] text-[#FFFFFF] text-[11px] font-extrabold uppercase px-2 py-0.5">
+                    ${escapeHtml(rule.discipline)}
+                  </span>
+                  <span class="text-xs font-extrabold text-[#050B14]">
+                    ${escapeHtml(dayLabel)} • ${escapeHtml(rule.time)}
+                  </span>
+                </div>
+                <div class="text-xs text-[#334155] mt-1">
+                  Místo: <strong class="text-[#050B14]">${escapeHtml(rule.location)}</strong> • Délka: ${escapeHtml(rule.duration)}
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onclick="editTrainingRule('${rule.id}')"
+                  class="px-2.5 py-1.5 bg-[#F1F5F9] hover:bg-[#0A192F] text-[#050B14] hover:text-[#FFFFFF] border border-[#0A192F] text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                >
+                  Upravit
+                </button>
+                <button
+                  type="button"
+                  onclick="deleteTrainingRule('${rule.id}')"
+                  class="px-2.5 py-1.5 bg-[#FFFFFF] hover:bg-[#334155] text-[#334155] hover:text-[#FFFFFF] border border-[#94A3B8] text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                >
+                  Smazat
+                </button>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    /* =========================================================================
+       4. AKTUALITY (AŽ 3 FOTKY NA AKTUALITU + OŘEZ + SKRYTÉ MAZÁNÍ V "+")
+       ========================================================================= */
+    function loadNewsFromStorage() {
+      try {
+        const raw = localStorage.getItem(NEWS_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULT_NEWS_ARTICLES));
+    }
+
+    function persistNewsToStorage() {
+      try {
+        localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(newsArticles));
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function formatCzechShortDate(isoStr) {
+      if (!isoStr) return "";
+      const [y, m, d] = isoStr.split("-").map(Number);
+      return `${d}. ${m}. ${y}`;
+    }
+
+    function createExcerpt(text, maxLength) {
+      const normalized = text.replace(/\s+/g, " ").trim();
+      if (normalized.length <= maxLength) return normalized;
+      return normalized.slice(0, maxLength).replace(/\s+\S*$/, "") + "...";
+    }
+
+    function renderNewsGrid() {
+      const grid = document.getElementById("news-grid");
+
+      if (newsArticles.length === 0) {
+        grid.innerHTML = `<div class="col-span-full bg-[#FFFFFF] border-2 border-[#0A192F] p-8 text-center text-sm text-[#334155]">Zatím zde nejsou žádné aktuality. Přidejte první přes tlačítko <strong>+</strong> vpravo nahoře.</div>`;
+        return;
+      }
+
+      grid.innerHTML = newsArticles
+        .map((article) => {
+          const photos = Array.isArray(article.photos) && article.photos.length > 0 ? article.photos : [];
+          const primaryPhoto = photos[0] || "";
+          const photoCountBadge = photos.length > 1
+            ? `<div class="absolute top-3 right-3 bg-[#0A192F]/95 border border-[#FFFFFF] px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-[#FFFFFF]">1 / ${photos.length} FOTKY</div>`
+            : "";
+
+          return `
+            <article onclick="openNewsDetailModal('${article.id}')" class="bg-[#FFFFFF] border-2 border-[#0A192F] flex flex-col group cursor-pointer hover:border-[#1B4378] transition-colors">
+              <!-- Tmavý rámeček s object-contain: celá fotka bez oříznutí -->
+              <div class="h-56 sm:h-64 bg-[#050B14] overflow-hidden relative border-b-2 border-[#0A192F] flex items-center justify-center p-2">
+                ${photoCountBadge}
+                ${
+                  primaryPhoto
+                    ? `<img
+                        src="${escapeHtml(primaryPhoto)}"
+                        alt="${escapeHtml(article.title)}"
+                        class="max-h-full max-w-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
+                        onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+                      />`
+                    : ""
+                }
+                <div class="${primaryPhoto ? "hidden" : ""} w-full h-full bg-[#0A192F] flex items-center justify-center p-6 text-center">
+                  <span class="text-xs font-black uppercase tracking-widest text-[#94A3B8]">BIKE FREAKS HOLICE</span>
+                </div>
+              </div>
+
+              <div class="p-6 flex flex-col flex-grow">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-[#334155] mb-1.5">
+                  ${escapeHtml(article.dateDisplay || "")}
+                </div>
+                <h3 class="text-lg sm:text-xl font-black text-[#050B14] uppercase tracking-tight group-hover:text-[#1B4378] transition-colors">
+                  ${escapeHtml(article.title)}
+                </h3>
+                <p class="mt-2.5 text-sm text-[#334155] leading-relaxed flex-grow">
+                  ${escapeHtml(article.excerpt)}
+                </p>
+                <span class="mt-5 inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#0A192F] group-hover:text-[#1B4378] self-start">
+                  <span>Číst více</span>
+                  <span aria-hidden="true">→</span>
+                </span>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    /* --- VEŘEJNÉ ČTENÍ AKTUALITY (BEZ TLAČÍTKA PRO MAZÁNÍ, SE VŠEMI FOTKAMI) --- */
+    function openNewsDetailModal(articleId) {
+      const article = newsArticles.find((a) => a.id === articleId);
+      if (!article) return;
+
+      const photos = Array.isArray(article.photos) ? article.photos : [];
+      document.getElementById("news-detail-tag").textContent =
+        photos.length > 1 ? `Aktualita • ${photos.length} fotografie` : "Aktualita klubu";
+      document.getElementById("news-detail-date").textContent = article.dateDisplay || "";
+      document.getElementById("news-detail-title").textContent = article.title;
+      document.getElementById("news-detail-body").textContent = article.fullText;
+
+      const galleryEl = document.getElementById("news-detail-gallery");
+      if (photos.length > 0) {
+        galleryEl.innerHTML = photos
+          .map(
+            (src, idx) => `
+              <figure class="bg-[#050B14] border-2 border-[#0A192F] p-2 flex flex-col items-center">
+                <img
+                  src="${escapeHtml(src)}"
+                  alt="${escapeHtml(article.title)} – fotka ${idx + 1}"
+                  class="max-w-full max-h-[460px] object-contain"
+                  onerror="this.closest('figure').style.display='none';"
+                />
+                ${
+                  photos.length > 1
+                    ? `<figcaption class="w-full text-right text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] pt-1.5 px-1">Fotka ${idx + 1} / ${photos.length}</figcaption>`
+                    : ""
+                }
+              </figure>
+            `
+          )
+          .join("");
+      } else {
+        galleryEl.innerHTML = "";
+      }
+
+      const modal = document.getElementById("news-detail-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeNewsDetailModal() {
+      const modal = document.getElementById("news-detail-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    /* --- "+" MODÁL: PŘIDÁNÍ AKTUALITY (AŽ 3 FOTKY + OŘEZ) & SKRYTÉ MAZÁNÍ --- */
+    function openNewsPlusModal() {
+      resetCreateNewsForm();
+      switchPlusModalMode("create");
+
+      const modal = document.getElementById("news-plus-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeNewsPlusModal() {
+      const modal = document.getElementById("news-plus-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      cancelDeleteConfirmation();
+    }
+
+    function switchPlusModalMode(mode) {
+      const createView = document.getElementById("plus-modal-create-view");
+      const deleteView = document.getElementById("plus-modal-delete-view");
+      const backBtn = document.getElementById("delete-view-back-btn");
+      const titleEl = document.getElementById("news-plus-modal-title");
+
+      cancelDeleteConfirmation();
+
+      if (mode === "delete") {
+        createView.classList.add("hidden");
+        deleteView.classList.remove("hidden");
+        backBtn.classList.remove("hidden");
+        titleEl.textContent = "Vymazat aktualitu";
+        renderDeleteArticlesList();
+      } else {
+        deleteView.classList.add("hidden");
+        createView.classList.remove("hidden");
+        backBtn.classList.add("hidden");
+        titleEl.textContent = "Nová aktualita";
+      }
+    }
+
+    function resetCreateNewsForm() {
+      document.getElementById("news-create-form").reset();
+      document.getElementById("article-date-input").value = getTodayISO();
+      hideCreateNewsAlert();
+
+      photoSlots = [null, null, null];
+      activePhotoSlotIndex = 0;
+      renderPhotoSlotsUI();
+      updateCropEditorForActiveSlot();
+    }
+
+    function showCreateNewsAlert(msg) {
+      const box = document.getElementById("create-news-alert");
+      box.textContent = msg;
+      box.classList.remove("hidden");
+    }
+
+    function hideCreateNewsAlert() {
+      document.getElementById("create-news-alert").classList.add("hidden");
+    }
+
+    function showNewsToast(message) {
+      const toast = document.getElementById("news-toast");
+      document.getElementById("news-toast-text").textContent = message;
+      toast.classList.remove("hidden");
+    }
+
+    function hideNewsToast() {
+      document.getElementById("news-toast").classList.add("hidden");
+    }
+
+    /* --- VÍCENÁSOBNÝ VÝBĚR FOTOGRAFIÍ (MAX. 3) A SLOTY --- */
+    function handleMultiPhotoUpload(event) {
+      hideCreateNewsAlert();
+      const files = Array.from(event.target.files || []);
+      event.target.value = "";
+      if (files.length === 0) return;
+
+      // Najdeme volné sloty v poli photoSlots[0..2]
+      const emptyIndices = [];
+      for (let i = 0; i < 3; i++) {
+        if (!photoSlots[i]) emptyIndices.push(i);
+      }
+
+      if (emptyIndices.length === 0) {
+        showCreateNewsAlert("Všechny 3 pozice pro fotky jsou již obsazené. Odeberte některou fotku křížkem ×, pokud ji chcete nahradit.");
+        return;
+      }
+
+      if (files.length > emptyIndices.length) {
+        showCreateNewsAlert(`Lze připojit maximálně 3 fotografie k jedné aktualitě. Nahráno bylo prvních ${emptyIndices.length}.`);
+      }
+
+      const filesToProcess = files.slice(0, emptyIndices.length);
+      let firstLoadedSlot = null;
+
+      filesToProcess.forEach((file, idx) => {
+        const targetSlotIdx = emptyIndices[idx];
+        if (firstLoadedSlot === null) firstLoadedSlot = targetSlotIdx;
+
+        const reader = new FileReader();
+        reader.onload = function (loadEvent) {
+          const img = new Image();
+          img.onload = function () {
+            const slotObj = {
+              img,
+              mode: "contain",
+              zoom: 1,
+              panX: 0,
+              panY: 0,
+              dataUrl: ""
+            };
+            slotObj.dataUrl = renderSlotToDataUrl(slotObj);
+            photoSlots[targetSlotIdx] = slotObj;
+
+            if (targetSlotIdx === firstLoadedSlot) {
+              activePhotoSlotIndex = targetSlotIdx;
+            }
+            renderPhotoSlotsUI();
+            updateCropEditorForActiveSlot();
+          };
+          img.src = loadEvent.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function selectPhotoSlot(index) {
+      if (!photoSlots[index]) return;
+      activePhotoSlotIndex = index;
+      renderPhotoSlotsUI();
+      updateCropEditorForActiveSlot();
+    }
+
+    function removePhotoSlot(index) {
+      photoSlots[index] = null;
+      if (activePhotoSlotIndex === index) {
+        const nextFilled = photoSlots.findIndex((s) => s !== null);
+        activePhotoSlotIndex = nextFilled !== -1 ? nextFilled : 0;
+      }
+      renderPhotoSlotsUI();
+      updateCropEditorForActiveSlot();
+    }
+
+    function renderPhotoSlotsUI() {
+      const container = document.getElementById("photo-slots-grid");
+      const labels = ["Fotka 1 (hlavní)", "Fotka 2", "Fotka 3"];
+
+      container.innerHTML = [0, 1, 2]
+        .map((idx) => {
+          const slot = photoSlots[idx];
+          const isActive = slot && activePhotoSlotIndex === idx;
+
+          if (slot) {
+            return `
+              <div
+                onclick="selectPhotoSlot(${idx})"
+                class="relative h-24 sm:h-28 bg-[#050B14] border-2 ${isActive ? "border-[#1B4378] ring-2 ring-[#0A192F]" : "border-[#0A192F]"} flex items-center justify-center p-1.5 cursor-pointer group"
+              >
+                <img src="${slot.dataUrl}" alt="${labels[idx]}" class="max-h-full max-w-full object-contain" />
+                <span class="absolute bottom-0 left-0 right-0 bg-[#0A192F]/90 text-[#FFFFFF] text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 truncate">
+                  ${labels[idx]}
+                </span>
+                <button
+                  type="button"
+                  onclick="event.stopPropagation(); removePhotoSlot(${idx});"
+                  aria-label="Odebrat ${labels[idx]}"
+                  class="absolute top-1 right-1 w-6 h-6 bg-[#050B14] hover:bg-[#1B4378] text-[#FFFFFF] border border-[#FFFFFF] text-xs font-black flex items-center justify-center cursor-pointer"
+                >
+                  ×
+                </button>
+              </div>
+            `;
+          }
+
+          return `
+            <label class="h-24 sm:h-28 bg-[#FFFFFF] border-2 border-dashed border-[#94A3B8] hover:border-[#0A192F] flex flex-col items-center justify-center p-2 text-center cursor-pointer transition-colors">
+              <span class="text-lg font-black text-[#334155]">+</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-[#334155] mt-0.5">${labels[idx]}</span>
+              <input
+                type="file"
+                accept="image/*"
+                onchange="handleSingleSlotUpload(event, ${idx})"
+                class="hidden"
+              />
+            </label>
+          `;
+        })
+        .join("");
+    }
+
+    function handleSingleSlotUpload(event, slotIdx) {
+      hideCreateNewsAlert();
+      const file = event.target.files && event.target.files[0];
+      event.target.value = "";
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (loadEvent) {
+        const img = new Image();
+        img.onload = function () {
+          const slotObj = {
+            img,
+            mode: "contain",
+            zoom: 1,
+            panX: 0,
+            panY: 0,
+            dataUrl: ""
+          };
+          slotObj.dataUrl = renderSlotToDataUrl(slotObj);
+          photoSlots[slotIdx] = slotObj;
+          activePhotoSlotIndex = slotIdx;
+          renderPhotoSlotsUI();
+          updateCropEditorForActiveSlot();
+        };
+        img.src = loadEvent.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* --- INTERAKTIVNÍ PLÁTNO PRO OŘEZ A PŘIZPŮSOBENÍ AKTIVNÍ FOTKY --- */
+    function renderSlotToDataUrl(slot) {
+      const { img, mode, zoom, panX, panY } = slot;
+      const maxDim = 900;
+      let targetW = maxDim;
+      let targetH = maxDim;
+
+      if (mode === "1:1") {
+        targetW = 800;
+        targetH = 800;
+      } else if (mode === "16:9") {
+        targetW = 900;
+        targetH = 506;
+      } else {
+        // 'contain' – zachová přesný poměr stran celé fotografie
+        const ratio = img.width / img.height;
+        if (ratio >= 1) {
+          targetW = Math.min(maxDim, img.width);
+          targetH = Math.round(targetW / ratio);
+        } else {
+          targetH = Math.min(maxDim, img.height);
+          targetW = Math.round(targetH * ratio);
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#050B14";
+      ctx.fillRect(0, 0, targetW, targetH);
+
+      let baseScale = 1;
+      if (mode === "contain") {
+        baseScale = Math.min(targetW / img.width, targetH / img.height);
+      } else {
+        baseScale = Math.max(targetW / img.width, targetH / img.height);
+      }
+
+      const finalScale = baseScale * zoom;
+      const drawW = img.width * finalScale;
+      const drawH = img.height * finalScale;
+
+      const drawX = (targetW - drawW) / 2 + panX;
+      const drawY = (targetH - drawH) / 2 + panY;
+
+      ctx.drawImage(img, drawX, drawY, drawW, drawH);
+      return canvas.toDataURL("image/jpeg", 0.78);
+    }
+
+    function updateCropEditorForActiveSlot() {
+      const panel = document.getElementById("crop-editor-panel");
+      const slot = photoSlots[activePhotoSlotIndex];
+
+      if (!slot) {
+        panel.classList.add("hidden");
+        return;
+      }
+
+      panel.classList.remove("hidden");
+      const labels = ["Fotka 1 (hlavní)", "Fotka 2", "Fotka 3"];
+      document.getElementById("crop-editor-slot-label").textContent = `Úprava: ${labels[activePhotoSlotIndex]}`;
+
+      // Aktualizace aktivního tlačítka režimu
+      document.querySelectorAll(".crop-mode-btn").forEach((btn) => {
+        if (btn.dataset.cropMode === slot.mode) {
+          btn.className = "crop-mode-btn px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider border border-[#0A192F] bg-[#0A192F] text-[#FFFFFF] cursor-pointer";
+        } else {
+          btn.className = "crop-mode-btn px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider border border-[#94A3B8] bg-[#FFFFFF] text-[#050B14] cursor-pointer";
+        }
+      });
+
+      const zoomPct = Math.round(slot.zoom * 100);
+      document.getElementById("photo-zoom-slider").value = zoomPct;
+      document.getElementById("photo-zoom-value").textContent = `${zoomPct} %`;
+
+      drawInteractiveCropPreview();
+    }
+
+    function drawInteractiveCropPreview() {
+      const slot = photoSlots[activePhotoSlotIndex];
+      if (!slot) return;
+
+      const previewCanvas = document.getElementById("photo-crop-canvas");
+      const { img, mode, zoom, panX, panY } = slot;
+
+      let outW = 900;
+      let outH = 900;
+      if (mode === "1:1") {
+        outW = 800;
+        outH = 800;
+      } else if (mode === "16:9") {
+        outW = 900;
+        outH = 506;
+      } else {
+        const ratio = img.width / img.height;
+        if (ratio >= 1) {
+          outW = Math.min(900, img.width);
+          outH = Math.round(outW / ratio);
+        } else {
+          outH = Math.min(900, img.height);
+          outW = Math.round(outH * ratio);
+        }
+      }
+
+      previewCanvas.width = outW;
+      previewCanvas.height = outH;
+      const ctx = previewCanvas.getContext("2d");
+
+      ctx.fillStyle = "#050B14";
+      ctx.fillRect(0, 0, outW, outH);
+
+      const baseScale = mode === "contain"
+        ? Math.min(outW / img.width, outH / img.height)
+        : Math.max(outW / img.width, outH / img.height);
+
+      const finalScale = baseScale * zoom;
+      const drawW = img.width * finalScale;
+      const drawH = img.height * finalScale;
+
+      const drawX = (outW - drawW) / 2 + panX;
+      const drawY = (outH - drawH) / 2 + panY;
+
+      ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+      // Uložení aktuálního výřezu do slotu
+      slot.dataUrl = previewCanvas.toDataURL("image/jpeg", 0.78);
+      renderPhotoSlotsUI();
+    }
+
+    function setActiveSlotCropMode(mode) {
+      const slot = photoSlots[activePhotoSlotIndex];
+      if (!slot) return;
+      slot.mode = mode;
+      slot.panX = 0;
+      slot.panY = 0;
+      updateCropEditorForActiveSlot();
+    }
+
+    function setActiveSlotZoom(zoomPercentStr) {
+      const slot = photoSlots[activePhotoSlotIndex];
+      if (!slot) return;
+      slot.zoom = Number(zoomPercentStr) / 100;
+      document.getElementById("photo-zoom-value").textContent = `${zoomPercentStr} %`;
+      drawInteractiveCropPreview();
+    }
+
+    function setupCropCanvasPointerEvents() {
+      const canvas = document.getElementById("photo-crop-canvas");
+
+      const startDrag = (clientX, clientY) => {
+        const slot = photoSlots[activePhotoSlotIndex];
+        if (!slot) return;
+        isDraggingCropCanvas = true;
+        dragStartClientX = clientX;
+        dragStartClientY = clientY;
+        dragStartPanX = slot.panX;
+        dragStartPanY = slot.panY;
+      };
+
+      const moveDrag = (clientX, clientY) => {
+        if (!isDraggingCropCanvas) return;
+        const slot = photoSlots[activePhotoSlotIndex];
+        if (!slot) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const scaleFactorX = canvas.width / (rect.width || 1);
+        const scaleFactorY = canvas.height / (rect.height || 1);
+
+        slot.panX = dragStartPanX + (clientX - dragStartClientX) * scaleFactorX;
+        slot.panY = dragStartPanY + (clientY - dragStartClientY) * scaleFactorY;
+        drawInteractiveCropPreview();
+      };
+
+      const endDrag = () => {
+        isDraggingCropCanvas = false;
+      };
+
+      canvas.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        startDrag(e.clientX, e.clientY);
+      });
+      window.addEventListener("mousemove", (e) => moveDrag(e.clientX, e.clientY));
+      window.addEventListener("mouseup", endDrag);
+
+      canvas.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1) {
+          startDrag(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      canvas.addEventListener("touchmove", (e) => {
+        if (isDraggingCropCanvas && e.touches.length === 1) {
+          e.preventDefault();
+          moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: false });
+
+      window.addEventListener("touchend", endDrag);
+    }
+
+    function submitNewArticle(event) {
+      event.preventDefault();
+      hideCreateNewsAlert();
+
+      const title = document.getElementById("article-title-input").value.trim();
+      const dateISO = document.getElementById("article-date-input").value || getTodayISO();
+      const bodyText = document.getElementById("article-body-input").value.trim();
+
+      if (!title || !bodyText) {
+        showCreateNewsAlert("Vyplňte prosím nadpis i popis aktuality.");
+        return;
+      }
+
+      const attachedPhotos = photoSlots
+        .filter((slot) => slot && slot.dataUrl)
+        .map((slot) => slot.dataUrl);
+
+      const newArticle = {
+        id: "news-" + Date.now(),
+        dateISO,
+        dateDisplay: formatCzechShortDate(dateISO),
+        title,
+        excerpt: createExcerpt(bodyText, 175),
+        fullText: bodyText,
+        photos: attachedPhotos
+      };
+
+      newsArticles.unshift(newArticle);
+      const savedOk = persistNewsToStorage();
+      if (!savedOk) {
+        newsArticles.shift();
+        showCreateNewsAlert("Nepodařilo se uložit fotky do paměti prohlížeče (příliš velký objem dat). Zkuste použít menší počet fotek nebo smazat starší aktuality.");
+        return;
+      }
+
+      renderNewsGrid();
+      closeNewsPlusModal();
+      showNewsToast(`Aktualita „${title}“ byla přidána na web.`);
+    }
+
+    /* --- SKRYTÝ REŽIM MAZÁNÍ AKTUALIT UVNITŘ "+" MODÁLU --- */
+    function renderDeleteArticlesList() {
+      const listEl = document.getElementById("delete-articles-list");
+
+      if (newsArticles.length === 0) {
+        listEl.innerHTML = `<div class="p-6 text-center text-xs sm:text-sm text-[#334155] bg-[#F1F5F9] border border-[#E2E8F0]">Žádné aktuality ke smazání.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = newsArticles
+        .map((article) => {
+          const photos = Array.isArray(article.photos) ? article.photos : [];
+          const thumb = photos[0] || "";
+          const countLabel = photos.length === 1
+            ? "1 fotka"
+            : photos.length > 1
+              ? `${photos.length} fotky`
+              : "Bez fotky";
+
+          return `
+            <div
+              tabindex="0"
+              class="delete-article-row bg-[#FFFFFF] border-2 border-[#0A192F] p-3 flex items-center justify-between gap-3 transition-colors"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-16 h-12 bg-[#050B14] border border-[#0A192F] flex items-center justify-center shrink-0 overflow-hidden">
+                  ${
+                    thumb
+                      ? `<img src="${escapeHtml(thumb)}" alt="" class="max-h-full max-w-full object-contain" onerror="this.style.display='none';" />`
+                      : `<span class="text-[10px] font-black text-[#94A3B8]">BFH</span>`
+                  }
+                </div>
+                <div class="min-w-0">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-[#334155]">
+                    ${escapeHtml(article.dateDisplay || "")} • ${countLabel}
+                  </div>
+                  <div class="text-xs sm:text-sm font-black text-[#050B14] truncate">
+                    ${escapeHtml(article.title)}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onclick="requestDeleteConfirmation('${article.id}')"
+                title="Smazat aktualitu"
+                aria-label="Smazat aktualitu ${escapeHtml(article.title)}"
+                class="delete-cross-btn w-9 h-9 bg-[#F1F5F9] text-[#334155] border-2 border-[#94A3B8] font-black text-base flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function requestDeleteConfirmation(articleId) {
+      const article = newsArticles.find((a) => a.id === articleId);
+      if (!article) return;
+
+      articlePendingDeleteId = articleId;
+      document.getElementById("delete-confirm-question").textContent =
+        `Opravdu chcete smazat aktualitu „${article.title}“?`;
+      const banner = document.getElementById("delete-confirm-banner");
+      banner.classList.remove("hidden");
+      banner.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function cancelDeleteConfirmation() {
+      articlePendingDeleteId = null;
+      const banner = document.getElementById("delete-confirm-banner");
+      if (banner) banner.classList.add("hidden");
+    }
+
+    function confirmDeleteSelectedArticle() {
+      if (!articlePendingDeleteId) return;
+
+      const deletedArticle = newsArticles.find((a) => a.id === articlePendingDeleteId);
+      newsArticles = newsArticles.filter((a) => a.id !== articlePendingDeleteId);
+      persistNewsToStorage();
+
+      cancelDeleteConfirmation();
+      renderNewsGrid();
+      renderDeleteArticlesList();
+
+      if (deletedArticle) {
+        showNewsToast(`Aktualita „${deletedArticle.title}“ byla smazána.`);
+      }
+    }
+
+    /* =========================================================================
+       5. INTERAKTIVNÍ ČASOVÁ OSA V SEKCI O NÁS (1992 – 2026)
+       ========================================================================= */
+    function renderInteractiveTimeline() {
+      const container = document.getElementById("interactive-timeline");
+
+      container.innerHTML = `
+        <div class="relative">
+          <div class="hidden lg:block absolute top-7 left-0 right-0 h-1 bg-[#0A192F]"></div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-3 relative">
+            ${TIMELINE_MILESTONES.map((item, idx) => {
+              let desktopAlignClass = "lg:left-1/2 lg:-translate-x-1/2";
+              if (idx === 0) desktopAlignClass = "lg:left-0 lg:translate-x-0";
+              if (idx === TIMELINE_MILESTONES.length - 1) desktopAlignClass = "lg:right-0 lg:left-auto lg:translate-x-0";
+
+              return `
+                <div
+                  data-timeline-node="${item.year}"
+                  onmouseenter="handleTimelineMouseEnter('${item.year}')"
+                  onmouseleave="handleTimelineMouseLeave('${item.year}')"
+                  class="relative flex flex-col lg:items-center"
+                >
+                  <button
+                    type="button"
+                    onclick="handleTimelineClick('${item.year}')"
+                    aria-expanded="false"
+                    data-year-btn="${item.year}"
+                    class="w-full lg:w-auto bg-[#0A192F] hover:bg-[#1B4378] text-[#FFFFFF] border-2 border-[#0A192F] px-5 py-3 skew-badge transition-colors cursor-pointer z-10 text-center"
+                  >
+                    <span class="skew-inner text-base sm:text-lg font-black tracking-wider">
+                      ${escapeHtml(item.year)}
+                    </span>
+                  </button>
+
+                  <div class="hidden lg:block w-0.5 h-4 bg-[#0A192F]"></div>
+
+                  <div
+                    data-year-popup="${item.year}"
+                    class="hidden lg:absolute lg:top-full ${desktopAlignClass} lg:w-80 lg:pt-2 z-30"
+                  >
+                    <div class="bg-[#0A192F] text-[#FFFFFF] border-2 border-[#1B4378] p-5 shadow-2xl">
+                      <div class="flex items-center justify-between gap-2 border-b border-[#1B4378] pb-2 mb-3">
+                        <span class="text-xs font-black uppercase tracking-widest text-[#94A3B8]">
+                          Období ${escapeHtml(item.year)}
+                        </span>
+                        <button
+                          type="button"
+                          onclick="event.stopPropagation(); closeTimelinePopup();"
+                          class="lg:hidden text-xs font-bold text-[#E2E8F0] hover:text-[#FFFFFF] px-1.5 py-0.5 border border-[#334155] cursor-pointer"
+                          aria-label="Zavřít detail roku"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <h3 class="text-base sm:text-lg font-black uppercase tracking-tight text-[#FFFFFF] leading-snug">
+                        ${escapeHtml(item.title)}
+                      </h3>
+                      <p class="mt-2.5 text-xs sm:text-sm text-[#E2E8F0] leading-relaxed">
+                        ${escapeHtml(item.summary)}
+                      </p>
+                      <div class="mt-4 pt-2.5 border-t border-[#1B4378] text-[11px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                        ▪ ${escapeHtml(item.highlight)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function openTimelineYear(year) {
+      if (activeTimelineYear && activeTimelineYear !== year) {
+        closeTimelinePopup();
+      }
+      activeTimelineYear = year;
+
+      const btn = document.querySelector(`[data-year-btn="${year}"]`);
+      const popup = document.querySelector(`[data-year-popup="${year}"]`);
+      if (btn) {
+        btn.classList.remove("bg-[#0A192F]");
+        btn.classList.add("bg-[#1B4378]");
+        btn.setAttribute("aria-expanded", "true");
+      }
+      if (popup) {
+        popup.classList.remove("hidden");
+      }
+    }
+
+    function closeTimelinePopup() {
+      document.querySelectorAll("[data-year-popup]").forEach((el) => el.classList.add("hidden"));
+      document.querySelectorAll("[data-year-btn]").forEach((btn) => {
+        btn.classList.remove("bg-[#1B4378]");
+        btn.classList.add("bg-[#0A192F]");
+        btn.setAttribute("aria-expanded", "false");
+      });
+      activeTimelineYear = null;
+    }
+
+    function handleTimelineMouseEnter(year) {
+      if (window.matchMedia("(hover: hover)").matches) {
+        openTimelineYear(year);
+      }
+    }
+
+    function handleTimelineMouseLeave(year) {
+      if (window.matchMedia("(hover: hover)").matches && activeTimelineYear === year) {
+        closeTimelinePopup();
+      }
+    }
+
+    function handleTimelineClick(year) {
+      if (activeTimelineYear === year) {
+        closeTimelinePopup();
+      } else {
+        openTimelineYear(year);
+      }
+    }
+
+    /* =========================================================================
+       6. MOBILNÍ MENU A ZAVÍRÁNÍ MODÁLŮ KLIKNUTÍM MIMO OBSAH
+       ========================================================================= */
+    function toggleMobileMenu() {
+      const menu = document.getElementById("mobile-menu");
+      const btn = document.getElementById("mobile-menu-btn");
+      const openIcon = document.getElementById("menu-icon-open");
+      const closeIcon = document.getElementById("menu-icon-close");
+
+      const isHidden = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      btn.setAttribute("aria-expanded", String(isHidden));
+      openIcon.classList.toggle("hidden");
+      closeIcon.classList.toggle("hidden");
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById("mobile-menu");
+      const btn = document.getElementById("mobile-menu-btn");
+      const openIcon = document.getElementById("menu-icon-open");
+      const closeIcon = document.getElementById("menu-icon-close");
+
+      menu.classList.add("hidden");
+      btn.setAttribute("aria-expanded", "false");
+      openIcon.classList.remove("hidden");
+      closeIcon.classList.add("hidden");
+    }
+
+    document.getElementById("news-detail-modal").addEventListener("click", function (e) {
+      if (e.target === this) closeNewsDetailModal();
+    });
+    document.getElementById("news-plus-modal").addEventListener("click", function (e) {
+      if (e.target === this) closeNewsPlusModal();
+    });
+    document.getElementById("training-editor-modal").addEventListener("click", function (e) {
+      if (e.target === this) closeTrainingEditorModal();
+    });
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
